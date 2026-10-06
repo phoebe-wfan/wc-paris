@@ -1,0 +1,437 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.2">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!doctype html&gt;</p>
+<p class="p1">&lt;html lang="fr"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="utf-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width,initial-scale=1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="description" content="WC Paris — codes et informations communautaires sur les toilettes des fast-foods et cafés à Paris."&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="theme-color" content="#111111"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;WC Paris — Codes&lt;/title&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>:root{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color-scheme:light dark;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--bg:light-dark(#f7f7f4,#10110f);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--card:light-dark(#fff,#191a17);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--text:light-dark(#171814,#f3f4ee);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--muted:light-dark(#74766d,#a9ada2);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--line:light-dark(#e5e6df,#30322c);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--accent:#111;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--pill:light-dark(#f0f1ea,#292b25);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>*{box-sizing:border-box}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>body{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>#app{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>min-height:100vh;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>header{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:28px 22px 18px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>max-width:1100px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:auto;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>h1{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:30px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing:-.04em;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:0 0 7px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.sub{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:14px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.bar{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap:9px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-top:20px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex-wrap:wrap;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>input,select,button{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--card);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius:12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:11px 13px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font:inherit;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>input{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex:1;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>min-width:220px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>button{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>cursor:pointer;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.brands{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap:7px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>overflow:auto;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:0 22px 12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>max-width:1100px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:auto;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.brand.active{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:#111;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:white;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-color:#111;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.brand{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>white-space:nowrap;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.stats{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>max-width:1100px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:0 auto;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:4px 22px 15px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:13px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.grid{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>max-width:1100px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:auto;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:0 22px 40px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display:grid;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns:repeat(auto-fit,minmax(260px,1fr));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap:12px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.card{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--card);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius:18px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:16px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box-shadow:0 2px 8px #00000008;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.top{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>justify-content:space-between;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.logo{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight:800;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:6px 8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--pill);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius:9px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>height:max-content;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.name{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight:750;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:17px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.addr{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:13px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-top:3px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.code{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:29px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight:850;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing:.08em;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:17px 0 4px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.unknown{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:17px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-weight:650;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.meta{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.row{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>gap:8px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-top:13px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.row button{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>flex:1;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.verify{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:11px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin-top:10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:#4e7a52;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.empty{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>grid-column:1/-1;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:45px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>text-align:center;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>.note{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>max-width:1100px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>margin:0 auto 25px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:0 22px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>line-height:1.5;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>@media(max-width:600px){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h1{font-size:25px}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>.grid{grid-template-columns:1fr}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="app"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h1&gt;🚻 WC Paris — Codes&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="sub"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Le raccourci pour trouver les toilettes des fast-foods et cafés, avec le dernier code connu.</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="q" placeholder="Rechercher une adresse, un quartier…"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="sort"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="recent"&gt;Plus récemment vérifié&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="brand"&gt;Enseigne&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="brands" id="brands"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stats" id="stats"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="grid" id="grid"&gt;&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="note"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>Les codes peuvent changer. Un code affiché ici est une information communautaire et doit être vérifié sur place.</p>
+<p class="p1"><span class="Apple-converted-space">      </span>Si le restaurant imprime un code sur le ticket, celui-ci prévaut.</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>/* GitHub Pages-ready: single-file static site, no build step or server required. */</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const data = [</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Burger King',a:'Rue de Dunkerque, 75010 Paris',c:'2406',v:'2026-10-06',s:'confirmé'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Burger King',a:'Saint-Michel, Paris 5e',c:'09487',v:'2026-10-06',s:'confirmé'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Burger King',a:'2 Rue Pierre Lescot, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Burger King',a:'36 Boulevard des Italiens, 75009 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Burger King',a:'1 Rue George Balanchine, 75013 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'12 Rue Berger, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'184 Rue de Rivoli, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'99 Rue de Rivoli, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'9 Boulevard de la Madeleine, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'116 Rue de Rivoli, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'89 Rue Réaumur, 75002 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'88bis Avenue Parmentier, 75011 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'80 Rue Traversière, 75012 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'72 Avenue de France, 75013 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'1 Rue du Commerce, 75015 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'McDonald’s',a:'277 Boulevard Pereire, 75017 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'KFC',a:'21 Place de la République, 75003 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'KFC',a:'5 Boulevard Beaumarchais, 75004 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'KFC',a:'6 Rue du 8 Mai 1945, 75010 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'KFC',a:'76 Avenue d’Italie, 75013 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'KFC',a:'46 Boulevard Barbès, 75018 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'KFC',a:'150-152 Boulevard de Ménilmontant, 75020 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'26 Avenue de l’Opéra, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'77 Rue Rambuteau, 75001 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'3 Boulevard des Capucines, 75002 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'21 Rue des Petits Carreaux, 75002 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'7 Boulevard Poissonnière, 75002 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'46 Rue de Rivoli, 75004 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'8 Rue de Rivoli, 75004 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'118 Rue Monge, 75005 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'24 Boulevard Saint-Michel, 75006 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'91 Boulevard Saint-Germain, 75006 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'90 Rue Saint-Dominique, 75007 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'162 Rue du Faubourg Saint-Honoré, 75008 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'2 Rue de la Pépinière, 75008 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'4 Rue de Sèze, 75009 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'5 Place Blanche, 75009 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'67 Rue La Fayette, 75009 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'32 Boulevard Haussmann, 75009 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'29 Rue du Faubourg Saint-Antoine, 75011 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'5 Rue de l’Ambroisie, 75012 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'211 Rue de Bercy, 75012 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'93 Avenue de France, 75013 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'70 Boulevard du Montparnasse, 75014 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'83 Rue St Charles, 75015 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'43 Avenue Félix Faure, 75015 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'66 Avenue de la Motte-Picquet, 75015 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'297 Rue de Vaugirard, 75015 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'90 Avenue Victor Hugo, 75016 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Starbucks',a:'23 Avenue de Wagram, 75017 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Popeyes',a:'15 Place de la République, 75003 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Popeyes',a:'9 Boulevard de Denain, 75010 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Popeyes',a:'42 Avenue d’Italie, 75013 Paris',c:null,v:null,s:'à vérifier'},</p>
+<p class="p1"><span class="Apple-converted-space">      </span>{b:'Popeyes',a:'1 Rue de Steinkerque, 75018 Paris',c:null,v:null,s:'à vérifier'}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>let brand = 'Tous';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const brands = [</p>
+<p class="p1"><span class="Apple-converted-space">      </span>'Tous',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>'McDonald’s',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>'KFC',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>'Burger King',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>'Starbucks',</p>
+<p class="p1"><span class="Apple-converted-space">      </span>'Popeyes'</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const bEl = document.getElementById('brands');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>brands.forEach(x =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let d = document.createElement('button');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>d.className = 'brand' + (x === 'Tous' ? ' active' : '');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>d.textContent = x;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>d.onclick = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>brand = x;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>document</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.querySelectorAll('.brand')</p>
+<p class="p1"><span class="Apple-converted-space">          </span>.forEach(z =&gt; z.classList.remove('active'));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>d.classList.add('active');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>render();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>bEl.appendChild(d);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('q').oninput = render;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('sort').onchange = render;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function render() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let q = document</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.getElementById('q')</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.value</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.toLowerCase();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>let arr = data.filter(x =&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>(brand === 'Tous' || x.b === brand) &amp;&amp;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>(x.a + ' ' + x.b).toLowerCase().includes(q)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (document.getElementById('sort').value === 'brand') {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>arr.sort((x,y) =&gt; x.b.localeCompare(y.b));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>arr.sort((x,y) =&gt; (y.v || '').localeCompare(x.v || ''));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('stats').textContent =</p>
+<p class="p1"><span class="Apple-converted-space">        </span>`${arr.length} lieux · ${arr.filter(x =&gt; x.c).length} codes connus · Paris`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('grid').innerHTML =</p>
+<p class="p1"><span class="Apple-converted-space">        </span>arr.length</p>
+<p class="p1"><span class="Apple-converted-space">        </span>? arr.map(x =&gt; `</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;article class="card"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="top"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="name"&gt;${x.b}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="addr"&gt;${x.a}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;div class="logo"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>${x.c ? 'CODE' : 'INFO'}</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="code"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>${x.c || '&lt;span class="unknown"&gt;Code inconnu&lt;/span&gt;'}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="meta"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>${</p>
+<p class="p1"><span class="Apple-converted-space">                </span>x.c</p>
+<p class="p1"><span class="Apple-converted-space">                </span>? 'Dernière vérification : ' + x.v</p>
+<p class="p1"><span class="Apple-converted-space">                </span>: 'Besoin d’une vérification communautaire'</p>
+<p class="p1"><span class="Apple-converted-space">              </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">                </span>onclick="uploadUpdate(</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>'${x.b.replace(/'/g,"\\'")}',</p>
+<p class="p1"><span class="Apple-converted-space">                  </span>'${x.a.replace(/'/g,"\\'")}'</p>
+<p class="p1"><span class="Apple-converted-space">                </span>)"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>📷 Upload update</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="verify"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>● ${x.s}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/article&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>`).join('')</p>
+<p class="p1"><span class="Apple-converted-space">        </span>: `</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="empty"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Aucun résultat. Essaie un autre quartier ou une autre enseigne.</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function uploadUpdate(b,a) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>alert(</p>
+<p class="p1"><span class="Apple-converted-space">        </span>`Upload update : ${b} — ${a}</p>
+<p class="p2"><br></p>
+<p class="p1">Dans la vraie version, tu pourras envoyer une photo du code ou une mise à jour directement ici.`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>render();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
