@@ -173,6 +173,28 @@
       flex:1;
     }
 
+    .update-form{
+      display:flex;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .update-form input{
+      min-width:0;
+      width:100%;
+      flex:1;
+    }
+
+    .update-form button{
+      flex:0 0 auto;
+    }
+
+    .submitted{
+      margin-top:8px;
+      font-size:12px;
+      color:#4e7a52;
+    }
+
     .verify{
       font-size:11px;
       margin-top:10px;
@@ -237,15 +259,17 @@
     /* GitHub Pages-ready: single-file static site, no build step or server required. */
 
     const data = [
-      {b:'Burger King',a:'Rue de Dunkerque, 75010 Paris',c:'2406',v:'2026-10-06',s:'confirmé'},
+      {b:'Burger King',a:'Gare du Nord / Rue de Dunkerque, 75010 Paris',c:'7961',v:'2026-05-07',s:'signalé'},
       {b:'Burger King',a:'Saint-Michel, Paris 5e',c:'09487',v:'2026-10-06',s:'confirmé'},
+      {b:'Burger King',a:'16 Rue de Tilsitt, 75017 Paris',c:'2903',v:'2026-10-05',s:'signalé'},
+      {b:'Burger King',a:'124 Rue La Boétie, 75008 Paris',c:'BA2389AB',v:'2025-09-28',s:'confirmé'},
       {b:'Burger King',a:'2 Rue Pierre Lescot, 75001 Paris',c:null,v:null,s:'à vérifier'},
       {b:'Burger King',a:'36 Boulevard des Italiens, 75009 Paris',c:null,v:null,s:'à vérifier'},
       {b:'Burger King',a:'1 Rue George Balanchine, 75013 Paris',c:null,v:null,s:'à vérifier'},
 
       {b:'McDonald’s',a:'12 Rue Berger, 75001 Paris',c:null,v:null,s:'à vérifier'},
       {b:'McDonald’s',a:'184 Rue de Rivoli, 75001 Paris',c:null,v:null,s:'à vérifier'},
-      {b:'McDonald’s',a:'99 Rue de Rivoli, 75001 Paris',c:null,v:null,s:'à vérifier'},
+      {b:'McDonald’s',a:'99 Rue de Rivoli, 75001 Paris',c:'C2358',v:'2026-10-06',s:'signalé'},
       {b:'McDonald’s',a:'9 Boulevard de la Madeleine, 75001 Paris',c:null,v:null,s:'à vérifier'},
       {b:'McDonald’s',a:'116 Rue de Rivoli, 75001 Paris',c:null,v:null,s:'à vérifier'},
       {b:'McDonald’s',a:'89 Rue Réaumur, 75002 Paris',c:null,v:null,s:'à vérifier'},
@@ -291,7 +315,7 @@
       {b:'Starbucks',a:'90 Avenue Victor Hugo, 75016 Paris',c:null,v:null,s:'à vérifier'},
       {b:'Starbucks',a:'23 Avenue de Wagram, 75017 Paris',c:null,v:null,s:'à vérifier'},
 
-      {b:'Popeyes',a:'15 Place de la République, 75003 Paris',c:null,v:null,s:'à vérifier'},
+      {b:'Popeyes',a:'15 Place de la République, 75003 Paris',c:'C3589',v:'2026-10-06',s:'confirmé utilisateur'},
       {b:'Popeyes',a:'9 Boulevard de Denain, 75010 Paris',c:null,v:null,s:'à vérifier'},
       {b:'Popeyes',a:'42 Avenue d’Italie, 75013 Paris',c:null,v:null,s:'à vérifier'},
       {b:'Popeyes',a:'1 Rue de Steinkerque, 75018 Paris',c:null,v:null,s:'à vérifier'}
@@ -383,16 +407,17 @@
               }
             </div>
 
-            <div class="row">
-              <button
-                onclick="uploadUpdate(
-                  '${x.b.replace(/'/g,"\\'")}',
-                  '${x.a.replace(/'/g,"\\'")}'
-                )"
+            <div class="update-form">
+              <input
+                id="update-${data.indexOf(x)}"
+                maxlength="30"
+                autocomplete="off"
+                placeholder="Nouveau code…"
+                aria-label="Nouveau code pour ${x.b} ${x.a}"
               >
-                📷 Upload update
-              </button>
+              <button type="button" onclick="submitUpdate(${data.indexOf(x)})">提交</button>
             </div>
+            <div class="submitted" id="submitted-${data.indexOf(x)}"></div>
 
             <div class="verify">
               ● ${x.s}
@@ -407,12 +432,27 @@
         `;
     }
 
-    function uploadUpdate(b,a) {
-      alert(
-        `Upload update : ${b} — ${a}
+    function submitUpdate(index) {
+      const input = document.getElementById('update-' + index);
+      const msg = document.getElementById('submitted-' + index);
+      const code = input.value.trim();
 
-Dans la vraie version, tu pourras envoyer une photo du code ou une mise à jour directement ici.`
-      );
+      if (!code) {
+        msg.textContent = '请输入新密码。';
+        return;
+      }
+
+      const submissions = JSON.parse(localStorage.getItem('wcParisSubmissions') || '[]');
+      submissions.push({
+        brand: data[index].b,
+        address: data[index].a,
+        code,
+        submittedAt: new Date().toISOString()
+      });
+      localStorage.setItem('wcParisSubmissions', JSON.stringify(submissions));
+
+      input.value = '';
+      msg.textContent = '✓ 已提交（测试版：暂存在此设备）';
     }
 
     render();
