@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="WC Paris — codes et informations communautaires sur les toilettes des fast-foods et cafés à Paris.">
   <meta name="theme-color" content="#111111">
+  <meta name="application-name" content="WC Paris">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="WC Paris">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/wc-paris-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/wc-paris-icon.svg">
   <title>WC Paris — Codes</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1190,6 +1197,13 @@
     }
 
     render();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>
