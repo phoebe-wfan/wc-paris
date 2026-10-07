@@ -297,9 +297,9 @@
       </div>
 
       <div class="lang-switch" id="langSwitch">
-        <button type="button" class="lang-btn" data-lang="fr">Français</button>
-        <button type="button" class="lang-btn" data-lang="en">English</button>
-        <button type="button" class="lang-btn" data-lang="zh">中文</button>
+        <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <button type="button" class="lang-btn" data-lang="cn">CN</button>
       </div>
 
       <div class="bar">
@@ -407,6 +407,10 @@
     let brand = 'Tous';
     let category = 'code';
     let lang = localStorage.getItem('wcParisLang') || 'fr';
+    if (lang === 'zh') {
+      lang = 'cn';
+      localStorage.setItem('wcParisLang','cn');
+    }
 
     const i18n = {
       fr:{
@@ -493,7 +497,7 @@
         enterCode:'Please enter a new code.',
         footer:'Codes can change. Information is community-sourced and should be checked on site. If a restaurant prints a code on the receipt, that code takes priority.'
       },
-      zh:{
+      cn:{
         subtitle:'巴黎密码厕所、免费厕所和付费厕所。',
         search:'搜索地址、街区、景点或地点…',
         recent:'最近更新',
@@ -542,7 +546,7 @@
     function categoryLabel(id){ return t(id); }
 
     function updateLanguageUI(){
-      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+      document.documentElement.lang = lang === 'cn' ? 'zh-CN' : lang;
       document.getElementById('subtitle').textContent = t('subtitle');
       document.getElementById('q').placeholder = t('search');
       const sort = document.getElementById('sort');
@@ -1087,7 +1091,7 @@
         }
 
         document.getElementById('stats').textContent =
-          lang === 'zh'
+          lang === 'cn'
             ? arr.length + ' 个地点 · ' + arr.filter(x => x.c).length + ' 个已知密码 · Paris'
             : lang === 'en'
               ? arr.length + ' places · ' + arr.filter(x => x.c).length + ' known codes · Paris'
@@ -1168,7 +1172,7 @@
           .sort((a,b) => a.name.localeCompare(b.name));
 
         document.getElementById('stats').textContent =
-          lang === 'zh' ? arr.length + ' 个有厕所的公共场所 · Paris'
+          lang === 'cn' ? arr.length + ' 个有厕所的公共场所 · Paris'
           : lang === 'en' ? arr.length + ' public places with toilets · Paris'
           : arr.length + ' lieux publics avec toilettes · Paris';
 
@@ -1211,7 +1215,7 @@
           .sort((a,b) => a.name.localeCompare(b.name));
 
         document.getElementById('stats').textContent =
-          lang === 'zh' ? arr.length + ' 个有厕所的商场'
+          lang === 'cn' ? arr.length + ' 个有厕所的商场'
           : lang === 'en' ? arr.length + ' shopping centers with toilets'
           : arr.length + ' centres commerciaux avec toilettes';
 
@@ -1257,7 +1261,7 @@
           .sort((a,b) => (a.station || '').localeCompare(b.station || ''));
 
         document.getElementById('stats').textContent =
-          lang === 'zh' ? arr.length + ' 个有厕所的地铁/火车站 · RATP + SNCF'
+          lang === 'cn' ? arr.length + ' 个有厕所的地铁/火车站 · RATP + SNCF'
           : lang === 'en' ? arr.length + ' stations with toilets · RATP + SNCF'
           : arr.length + ' stations / gares avec toilettes · RATP + SNCF';
 
@@ -1316,7 +1320,7 @@
       arr.sort((a,b) => a.address.localeCompare(b.address));
 
       const countLabel =
-        lang === 'zh'
+        lang === 'cn'
           ? (category === 'sanisette' ? ' 个免费 Sanisette' : category === 'free' ? ' 个免费厕所' : ' 个付费厕所')
           : lang === 'en'
             ? (category === 'sanisette' ? ' free sanisettes' : category === 'free' ? ' free toilets' : ' paid toilets')
