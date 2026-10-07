@@ -409,14 +409,16 @@
       {id:'free',label:'🆓 Toilettes gratuites'},
       {id:'sanisette',label:'⛲️ Sanisette gratuit'},
       {id:'metro',label:'🚇 Toilettes métro'},
-      {id:'museum',label:'🏛 Toilettes musée'},
+      {id:'public',label:'🏛 Lieux publics'},
+      {id:'commerce',label:'🛍 Toilettes commerces'},
       {id:'paid',label:'💶 Toilettes payantes'}
     ];
 
 
-    const museumToilets = [
+    const publicPlaceToilets = [
       {
-        kind:'museum',
+        kind:'public',
+        type:'Musée',
         name:'Petit Palais',
         address:'Avenue Winston-Churchill, 75008 Paris',
         access:'Collections permanentes gratuites, sans réservation. Sanitaires au rez-de-chaussée.',
@@ -426,7 +428,8 @@
         _latlng:[48.8660,2.3146]
       },
       {
-        kind:'museum',
+        kind:'public',
+        type:'Musée',
         name:'Musée Carnavalet — Histoire de Paris',
         address:'23 Rue de Sévigné, 75003 Paris',
         access:'Collections permanentes gratuites. Toilettes au niveau -1.',
@@ -436,7 +439,8 @@
         _latlng:[48.8572,2.3626]
       },
       {
-        kind:'museum',
+        kind:'public',
+        type:'Musée',
         name:'Musée d’Art Moderne de Paris',
         address:'11 Avenue du Président Wilson, 75116 Paris',
         access:'Collections permanentes gratuites, sans réservation. Toilettes indiquées sur le plan visiteurs.',
@@ -446,7 +450,8 @@
         _latlng:[48.8649,2.2972]
       },
       {
-        kind:'museum',
+        kind:'public',
+        type:'Musée',
         name:'Maison de Victor Hugo',
         address:'6 Place des Vosges, 75004 Paris',
         access:'À ajouter comme option gratuite après le 22/11/2026. Jusqu’au 22/11/2026, l’accès est lié à l’exposition temporaire payante.',
@@ -454,6 +459,113 @@
         hours:'Mar–Dim 10h–18h',
         source:'Maison de Victor Hugo / Paris Musées',
         _latlng:[48.8549,2.3663]
+      },
+      {
+        kind:'public',
+        type:'Bibliothèque',
+        name:'Bibliothèque Saint-Simon',
+        address:'116 Rue de Grenelle, 75007 Paris',
+        access:'Entrée libre. Toilettes disponibles dans la mairie, dont cabine PMR.',
+        pmr:true,
+        hours:'Mar–Ven selon espace · Sam matin',
+        source:'Ville de Paris',
+        _latlng:[48.8568,2.3191]
+      },
+      {
+        kind:'public',
+        type:'Bibliothèque',
+        name:'Bibliothèque Jean d’Ormesson',
+        address:'3 Rue de Lisbonne, 75008 Paris',
+        access:'Bibliothèque municipale avec toilettes sur place.',
+        pmr:true,
+        hours:'Mar–Sam',
+        source:'Ville de Paris',
+        _latlng:[48.8778,2.3171]
+      },
+      {
+        kind:'public',
+        type:'Bibliothèque',
+        name:'Bibliothèque Andrée Chedid',
+        address:'36 Rue Émeriau, 75015 Paris',
+        access:'Bibliothèque municipale avec toilettes et table à langer.',
+        pmr:null,
+        hours:'Selon horaires de la bibliothèque',
+        source:'Ville de Paris',
+        _latlng:[48.8492,2.2865]
+      },
+      {
+        kind:'public',
+        type:'Bibliothèque',
+        name:'Bibliothèque Mohammed Arkoun',
+        address:'74-76 Rue Mouffetard, 75005 Paris',
+        access:'Bibliothèque municipale avec toilettes sur place.',
+        pmr:null,
+        hours:'Selon horaires de la bibliothèque',
+        source:'Ville de Paris',
+        _latlng:[48.8427,2.3494]
+      }
+    ];
+
+    const commerceToilets = [
+      {
+        kind:'commerce',
+        name:'Westfield Forum des Halles',
+        address:'101 Porte Berger, 75001 Paris',
+        price:'1 €',
+        member:'Gratuit pour les membres Westfield Club',
+        access:'3 espaces : Place Carrée N-3 · Lescot N-2 · Berger N-3',
+        pmr:null,
+        hours:'Selon horaires du centre',
+        source:'Westfield',
+        _latlng:[48.8625,2.3469]
+      },
+      {
+        kind:'commerce',
+        name:'Westfield Les 4 Temps / CNIT',
+        address:'La Défense, 92800 Puteaux',
+        price:'1 €',
+        member:'Gratuit pour les membres Westfield Club, moins de 10 ans, femmes enceintes et PMR · 2 passages/jour',
+        access:'Plusieurs espaces aux niveaux 0, 1, 2, 3 et au CNIT niveau -1',
+        pmr:true,
+        hours:'Selon l’espace',
+        source:'Westfield',
+        _latlng:[48.8900,2.2385]
+      },
+      {
+        kind:'commerce',
+        name:'So Ouest',
+        address:'31 Rue d’Alsace, 92300 Levallois-Perret',
+        price:'Gratuit',
+        member:'Aucune inscription nécessaire',
+        access:'Niveau -1, près de H&M',
+        pmr:null,
+        hours:'Selon horaires du centre',
+        source:'Westfield',
+        _latlng:[48.8927,2.2982]
+      },
+      {
+        kind:'commerce',
+        name:'Les Ateliers Gaîté',
+        address:'80 Avenue du Maine, 75014 Paris',
+        price:'Gratuit',
+        member:'Aucune inscription nécessaire',
+        access:'Niveau 0, près de Nocibé · PMR · espace change-bébé',
+        pmr:true,
+        hours:'10h–20h',
+        source:'Westfield',
+        _latlng:[48.8382,2.3229]
+      },
+      {
+        kind:'commerce',
+        name:'Beaugrenelle Paris',
+        address:'12 Rue Linois, 75015 Paris',
+        price:'Prix non indiqué',
+        member:'Aucune gratuité membre confirmée',
+        access:'Panoramic niveau 1 · Magnetic niveau 3',
+        pmr:null,
+        hours:'Selon horaires du centre',
+        source:'Beaugrenelle Paris',
+        _latlng:[48.8488,2.2822]
       }
     ];
 
@@ -834,15 +946,15 @@
         return;
       }
 
-      if (category === 'museum') {
-        let arr = museumToilets
+      if (category === 'public') {
+        let arr = publicPlaceToilets
           .filter(x => normalizeText(
             x.name + ' ' + x.address + ' ' + (x.access || '')
           ).includes(q))
           .sort((a,b) => a.name.localeCompare(b.name));
 
         document.getElementById('stats').textContent =
-          arr.length + ' musées gratuits avec toilettes · Paris';
+          arr.length + ' lieux publics avec toilettes · Paris';
 
         updateMap(arr, false);
 
@@ -854,7 +966,7 @@
                   <div class="name">${x.name}</div>
                   <div class="addr">${x.address}</div>
                 </div>
-                <div class="logo">GRATUIT</div>
+                <div class="logo">${x.type || 'PUBLIC'}</div>
               </div>
 
               <div class="meta" style="margin-top:16px">
@@ -870,7 +982,42 @@
               <div class="source">Source : ${x.source}</div>
             </article>
           `).join('')
-          : '<div class="empty">Aucun musée trouvé.</div>';
+          : '<div class="empty">Aucun lieu public trouvé.</div>';
+        return;
+      }
+
+      if (category === 'commerce') {
+        let arr = commerceToilets
+          .filter(x => normalizeText(
+            x.name + ' ' + x.address + ' ' + (x.price || '') + ' ' +
+            (x.member || '') + ' ' + (x.access || '')
+          ).includes(q))
+          .sort((a,b) => a.name.localeCompare(b.name));
+
+        document.getElementById('stats').textContent =
+          arr.length + ' centres commerciaux avec toilettes';
+
+        updateMap(arr, false);
+
+        document.getElementById('grid').innerHTML = arr.length
+          ? arr.map(x => `
+            <article class="card">
+              <div class="top">
+                <div>
+                  <div class="name">${x.name}</div>
+                  <div class="addr">${x.address}</div>
+                </div>
+                <div class="logo">${x.price}</div>
+              </div>
+
+              <div class="meta" style="margin-top:16px">🕒 ${x.hours || 'Horaires non renseignés'}</div>
+              <div class="access-note">🎟 ${x.member || 'Conditions membre non renseignées'}</div>
+              <div class="meta" style="margin-top:8px">📍 ${x.access || 'Localisation non renseignée'}</div>
+              <div class="meta">${x.pmr === true ? '♿ Accessible PMR' : '♿ PMR non renseigné'}</div>
+              <div class="source">Source : ${x.source}</div>
+            </article>
+          `).join('')
+          : '<div class="empty">Aucun centre commercial trouvé.</div>';
         return;
       }
 
