@@ -389,6 +389,7 @@
 
     const categories = [
       {id:'code',label:'🔐 Toilettes à code'},
+      {id:'sanisette',label:'🚻 Sanisette gratuit'},
       {id:'free',label:'🆓 Toilettes gratuites'},
       {id:'paid',label:'💶 Toilettes payantes'}
     ];
@@ -455,8 +456,10 @@
           rows.push(...(json.results || []));
           if (!json.results || json.results.length < 100) break;
         }
-        publicToilets = rows.map(r => ({
-          kind: String(r.type || '').toLowerCase() === 'lavatory' ? 'paid' : 'free',
+        publicToilets = rows.map(r => {
+          const type = String(r.type || '').toLowerCase();
+          return {
+          kind: type.includes('sanisette') ? 'sanisette' : (type === 'lavatory' ? 'paid' : 'free'),
           name: r.type || 'Toilettes publiques',
           address: [r.adresse, r.arrondissement].filter(Boolean).join(', '),
           access: r.statut && r.statut !== 'En service' ? r.statut : null,
@@ -464,7 +467,8 @@
           baby: r.relais_bebe === 'Oui',
           hours: r.horaire || null,
           source: 'Ville de Paris — Paris Data'
-        }));
+        };
+        });
       } catch (e) {
         publicLoadError = true;
       } finally {
@@ -567,8 +571,13 @@
 
       arr.sort((a,b) => a.address.localeCompare(b.address));
 
+      const categoryLabel =
+        category === 'sanisette' ? ' sanisettes gratuites' :
+        category === 'free' ? ' toilettes gratuites' :
+        ' toilettes payantes';
+
       document.getElementById('stats').textContent =
-        arr.length + (category === 'free' ? ' toilettes gratuites' : ' toilettes payantes') + ' · Paris';
+        arr.length + categoryLabel + ' · Paris';
 
       document.getElementById('grid').innerHTML = arr.length
         ? arr.map(x => `
@@ -578,7 +587,7 @@
                 <div class="name">${x.name}</div>
                 <div class="addr">${x.address || 'Adresse non renseignée'}</div>
               </div>
-              <div class="logo">${category === 'free' ? 'GRATUIT' : 'PAYANT'}</div>
+              <div class="logo">${category === 'sanisette' ? 'SANISSETTE' : (category === 'free' ? 'GRATUIT' : 'PAYANT')}</div>
             </div>
 
             <div class="meta" style="margin-top:16px">
