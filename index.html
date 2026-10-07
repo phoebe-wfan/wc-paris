@@ -429,6 +429,19 @@
       {
         kind:'metro',
         operator:'SNCF',
+        station:'Paris Saint-Lazare',
+        line:'SNCF / correspondances métro 3, 12, 13, 14',
+        access:'Toilettes dans la gare, niveau quai 27 près de la sortie rue d’Amsterdam',
+        tariff:'Payant · 1 €',
+        pmr:true,
+        count:null,
+        location:'Paris Saint-Lazare, 75008 Paris',
+        source:'SNCF Gares & Connexions',
+        _latlng:[48.8761,2.3254]
+      },
+      {
+        kind:'metro',
+        operator:'SNCF',
         station:'Paris Gare de Lyon',
         line:'SNCF / correspondances métro 1, 14',
         access:'Toilettes signalées dans les services de la gare',
@@ -810,7 +823,7 @@
                   <div class="name">${x.operator || 'Transport'} · ${x.station}</div>
                   <div class="addr">${x.line || ''}</div>
                 </div>
-                <div class="logo">MÉTRO / GARE</div>
+                <div class="logo">STATION / GARE</div>
               </div>
 
               <div class="meta" style="margin-top:16px">
