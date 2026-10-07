@@ -409,7 +409,42 @@
       {id:'free',label:'🆓 Toilettes gratuites'},
       {id:'sanisette',label:'⛲️ Sanisette gratuit'},
       {id:'metro',label:'🚇 Toilettes métro'},
+      {id:'museum',label:'🏛 Toilettes musée'},
       {id:'paid',label:'💶 Toilettes payantes'}
+    ];
+
+
+    const museumToilets = [
+      {
+        kind:'museum',
+        name:'Petit Palais',
+        address:'Avenue Winston-Churchill, 75008 Paris',
+        access:'Collections permanentes gratuites, sans réservation. Sanitaires au rez-de-chaussée.',
+        pmr:true,
+        hours:'Mar–Dim 10h–18h',
+        source:'Petit Palais / Paris Musées',
+        _latlng:[48.8660,2.3146]
+      },
+      {
+        kind:'museum',
+        name:'Musée Carnavalet — Histoire de Paris',
+        address:'23 Rue de Sévigné, 75003 Paris',
+        access:'Collections permanentes gratuites. Toilettes au niveau -1.',
+        pmr:true,
+        hours:'Mar–Dim 10h–18h',
+        source:'Musée Carnavalet / Paris Musées',
+        _latlng:[48.8572,2.3626]
+      },
+      {
+        kind:'museum',
+        name:'Musée d’Art Moderne de Paris',
+        address:'11 Avenue du Président Wilson, 75116 Paris',
+        access:'Collections permanentes gratuites, sans réservation. Toilettes indiquées sur le plan visiteurs.',
+        pmr:true,
+        hours:'Mar–Dim 10h–18h',
+        source:'Musée d’Art Moderne de Paris / Paris Musées',
+        _latlng:[48.8649,2.2972]
+      }
     ];
 
     const sncfToilets = [
@@ -786,6 +821,46 @@
             `;
           }).join('')
           : '<div class="empty">Aucun résultat. Essaie un autre quartier ou une autre enseigne.</div>';
+        return;
+      }
+
+      if (category === 'museum') {
+        let arr = museumToilets
+          .filter(x => normalizeText(
+            x.name + ' ' + x.address + ' ' + (x.access || '')
+          ).includes(q))
+          .sort((a,b) => a.name.localeCompare(b.name));
+
+        document.getElementById('stats').textContent =
+          arr.length + ' musées gratuits avec toilettes · Paris';
+
+        updateMap(arr, false);
+
+        document.getElementById('grid').innerHTML = arr.length
+          ? arr.map(x => `
+            <article class="card">
+              <div class="top">
+                <div>
+                  <div class="name">${x.name}</div>
+                  <div class="addr">${x.address}</div>
+                </div>
+                <div class="logo">GRATUIT</div>
+              </div>
+
+              <div class="meta" style="margin-top:16px">
+                ${x.hours ? 'Horaires : ' + x.hours : 'Horaires non renseignés'}
+              </div>
+
+              <div class="meta">
+                ${x.pmr === true ? '♿ Accessible PMR' : 'Accessibilité non renseignée'}
+              </div>
+
+              <div class="access-note">🚻 ${x.access}</div>
+
+              <div class="source">Source : ${x.source}</div>
+            </article>
+          `).join('')
+          : '<div class="empty">Aucun musée trouvé.</div>';
         return;
       }
 
