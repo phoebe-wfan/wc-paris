@@ -6,6 +6,8 @@
   <meta name="description" content="WC Paris — codes et informations communautaires sur les toilettes des fast-foods et cafés à Paris.">
   <meta name="theme-color" content="#111111">
   <title>WC Paris — Codes</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     :root{
@@ -112,6 +114,16 @@
       padding:4px 22px 15px;
       color:var(--muted);
       font-size:13px;
+    }
+
+    #map{
+      max-width:1056px;
+      height:380px;
+      margin:0 auto 18px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:var(--card);
     }
 
     .grid{
@@ -272,7 +284,7 @@
       </div>
 
       <div class="bar">
-        <input id="q" placeholder="Rechercher une adresse, un quartier…">
+        <input id="q" placeholder="Rechercher une adresse, un quartier, un lieu…">
 
         <select id="sort">
           <option value="recent">Plus récemment vérifié</option>
@@ -285,6 +297,8 @@
     <div class="brands" id="brands"></div>
 
     <div class="stats" id="stats"></div>
+
+    <div id="map"></div>
 
     <main class="grid" id="grid"></main>
 
@@ -442,6 +456,51 @@
     document.getElementById('q').oninput = render;
     document.getElementById('sort').onchange = render;
 
+    function normalizeText(value='') {
+      return value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g,'')
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g,'');
+    }
+
+    const map = L.map('map').setView([48.8566, 2.3522], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19,
+      attribution:'&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    const markerLayer = L.layerGroup().addTo(map);
+
+    function getLatLng(r){
+      const p = r.geo_point_2d || r.coordonnees_geo || r.coordinates || null;
+      if (p && typeof p === 'object') {
+        const lat = p.lat ?? p.latitude ?? (Array.isArray(p.coordinates) ? p.coordinates[1] : null);
+        const lon = p.lon ?? p.lng ?? p.longitude ?? (Array.isArray(p.coordinates) ? p.coordinates[0] : null);
+        if (Number.isFinite(Number(lat)) && Number.isFinite(Number(lon))) return [Number(lat),Number(lon)];
+      }
+      if (r.geometry && Array.isArray(r.geometry.coordinates)) {
+        return [Number(r.geometry.coordinates[1]), Number(r.geometry.coordinates[0])];
+      }
+      return null;
+    }
+
+    function updateMap(items, isCode=false){
+      markerLayer.clearLayers();
+      const pts = [];
+
+      items.forEach(x => {
+        const ll = x._latlng || null;
+        if (!ll) return;
+        const title = isCode ? (x.b + ' — ' + x.a) : (x.name + ' — ' + x.address);
+        L.marker(ll).addTo(markerLayer).bindPopup(title);
+        pts.push(ll);
+      });
+
+      if (pts.length === 1) map.setView(pts[0], 16);
+      else if (pts.length > 1) map.fitBounds(pts, {padding:[24,24], maxZoom:15});
+      else map.setView([48.8566,2.3522],12);
+    }
+
     async function loadPublicToilets() {
       publicLoading = true;
       publicLoadError = false;
@@ -466,7 +525,8 @@
           pmr: r.acces_pmr === 'Oui' ? true : (r.acces_pmr === 'Non' ? false : null),
           baby: r.relais_bebe === 'Oui',
           hours: r.horaire || null,
-          source: 'Ville de Paris — Paris Data'
+          source: 'Ville de Paris — Paris Data',
+          _latlng: getLatLng(r)
         };
         });
       } catch (e) {
@@ -477,12 +537,12 @@
     }
 
     function render() {
-      const q = document.getElementById('q').value.toLowerCase();
+      const q = normalizeText(document.getElementById('q').value);
 
       if (category === 'code') {
         let arr = data.filter(x =>
           (brand === 'Tous' || x.b === brand) &&
-          (x.a + ' ' + x.b).toLowerCase().includes(q)
+          normalizeText(x.a + ' ' + x.b).includes(q)
         );
 
         if (document.getElementById('sort').value === 'brand') {
@@ -493,6 +553,7 @@
 
         document.getElementById('stats').textContent =
           arr.length + ' lieux · ' + arr.filter(x => x.c).length + ' codes connus · Paris';
+        updateMap(arr, true);
 
         const submissions = JSON.parse(localStorage.getItem('wcParisSubmissions') || '[]');
 
@@ -567,7 +628,7 @@
 
       let arr = [...publicToilets, ...extraToilets]
         .filter(x => x.kind === category)
-        .filter(x => (x.name + ' ' + x.address + ' ' + (x.access || '')).toLowerCase().includes(q));
+        .filter(x => normalizeText(x.name + ' ' + x.address + ' ' + (x.access || '')).includes(q));
 
       arr.sort((a,b) => a.address.localeCompare(b.address));
 
@@ -578,6 +639,7 @@
 
       document.getElementById('stats').textContent =
         arr.length + categoryLabel + ' · Paris';
+      updateMap(arr, false);
 
       document.getElementById('grid').innerHTML = arr.length
         ? arr.map(x => `
