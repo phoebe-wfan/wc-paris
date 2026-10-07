@@ -59,19 +59,6 @@
       flex-wrap:wrap;
     }
 
-    .lang-switch{
-      display:flex;
-      gap:6px;
-      margin-top:12px;
-      flex-wrap:wrap;
-    }
-
-    .lang-btn.active{
-      background:#111;
-      color:#fff;
-      border-color:#111;
-    }
-
     input,select,button{
       border:1px solid var(--line);
       background:var(--card);
@@ -292,14 +279,8 @@
     <header>
       <h1>🚻 WC Paris</h1>
 
-      <div class="sub" id="subtitle">
+      <div class="sub">
         Toilettes à code, gratuites et payantes à Paris.
-      </div>
-
-      <div class="lang-switch" id="langSwitch">
-        <button type="button" class="lang-btn" data-lang="fr">FR</button>
-        <button type="button" class="lang-btn" data-lang="en">EN</button>
-        <button type="button" class="lang-btn" data-lang="cn">CN</button>
       </div>
 
       <div class="bar">
@@ -321,7 +302,7 @@
 
     <main class="grid" id="grid"></main>
 
-    <div class="note" id="footerNote">
+    <div class="note">
       Les codes peuvent changer. Un code affiché ici est une information communautaire et doit être vérifié sur place.
       Si le restaurant imprime un code sur le ticket, celui-ci prévaut.
     </div>
@@ -406,166 +387,6 @@
 
     let brand = 'Tous';
     let category = 'code';
-    let lang = localStorage.getItem('wcParisLang') || 'fr';
-    if (lang === 'zh') {
-      lang = 'cn';
-      localStorage.setItem('wcParisLang','cn');
-    }
-
-    const i18n = {
-      fr:{
-        subtitle:'Toilettes à code, gratuites et payantes à Paris.',
-        search:'Rechercher une adresse, un quartier, un lieu…',
-        recent:'Plus récemment vérifié',
-        brandSort:'Enseigne',
-        all:'Tous',
-        code:'🔐 Toilettes à code',
-        free:'🆓 Toilettes gratuites',
-        sanisette:'⛲️ Sanisette gratuit',
-        metro:'🚇 Toilettes métro',
-        public:'🏛 Lieux publics',
-        commerce:'🛍 Toilettes commerces',
-        paid:'💶 Toilettes payantes',
-        codeUnknown:'Code inconnu',
-        lastUpdate:'Dernière mise à jour',
-        unknownDate:'date inconnue',
-        communityCheck:'Besoin d’une vérification communautaire',
-        newCode:'Nouveau code…',
-        submit:'Envoyer',
-        history:'Historique des codes',
-        source:'Source',
-        hours:'Horaires',
-        hoursUnknown:'Horaires non renseignés',
-        pmrYes:'♿ Accessible PMR',
-        pmrNo:'♿ Non PMR',
-        pmrUnknown:'♿ PMR non renseigné',
-        baby:'👶 Table à langer',
-        priceUnknown:'Prix non indiqué',
-        memberUnknown:'Conditions membre non renseignées',
-        locationUnknown:'Localisation non renseignée',
-        addressUnknown:'Adresse non renseignée',
-        countUnknown:'Nombre de toilettes non renseigné',
-        publicNone:'Aucun lieu public trouvé.',
-        commerceNone:'Aucun centre commercial trouvé.',
-        stationNone:'Aucune station ou gare trouvée.',
-        noResult:'Aucun résultat.',
-        loadingPublic:'Chargement des toilettes publiques…',
-        loadingMetro:'Chargement des toilettes RATP / SNCF…',
-        submitted:'✓ Envoyé ; les anciens et nouveaux codes sont conservés.',
-        enterCode:'Veuillez saisir un nouveau code.',
-        footer:'Les codes peuvent changer. Les informations sont communautaires et doivent être vérifiées sur place. Si un restaurant imprime un code sur le ticket, celui-ci prévaut.'
-      },
-      en:{
-        subtitle:'Code-access, free and paid toilets in Paris.',
-        search:'Search an address, neighborhood or place…',
-        recent:'Most recently verified',
-        brandSort:'Brand',
-        all:'All',
-        code:'🔐 Code toilets',
-        free:'🆓 Free toilets',
-        sanisette:'⛲️ Free sanisettes',
-        metro:'🚇 Metro & station toilets',
-        public:'🏛 Public places',
-        commerce:'🛍 Shopping toilets',
-        paid:'💶 Paid toilets',
-        codeUnknown:'Code unknown',
-        lastUpdate:'Last update',
-        unknownDate:'unknown date',
-        communityCheck:'Community verification needed',
-        newCode:'New code…',
-        submit:'Submit',
-        history:'Code history',
-        source:'Source',
-        hours:'Hours',
-        hoursUnknown:'Hours not provided',
-        pmrYes:'♿ Wheelchair accessible',
-        pmrNo:'♿ Not wheelchair accessible',
-        pmrUnknown:'♿ Accessibility not specified',
-        baby:'👶 Changing table',
-        priceUnknown:'Price not specified',
-        memberUnknown:'Membership conditions not specified',
-        locationUnknown:'Location not specified',
-        addressUnknown:'Address not specified',
-        countUnknown:'Number of toilets not specified',
-        publicNone:'No public place found.',
-        commerceNone:'No shopping center found.',
-        stationNone:'No station found.',
-        noResult:'No results.',
-        loadingPublic:'Loading public toilets…',
-        loadingMetro:'Loading RATP / SNCF toilets…',
-        submitted:'✓ Submitted; old and new codes are both kept.',
-        enterCode:'Please enter a new code.',
-        footer:'Codes can change. Information is community-sourced and should be checked on site. If a restaurant prints a code on the receipt, that code takes priority.'
-      },
-      cn:{
-        subtitle:'巴黎密码厕所、免费厕所和付费厕所。',
-        search:'搜索地址、街区、景点或地点…',
-        recent:'最近更新',
-        brandSort:'品牌',
-        all:'全部',
-        code:'🔐 密码厕所',
-        free:'🆓 免费厕所',
-        sanisette:'⛲️ 免费 Sanisette',
-        metro:'🚇 地铁 / 火车站厕所',
-        public:'🏛 公共场所厕所',
-        commerce:'🛍 商场厕所',
-        paid:'💶 付费厕所',
-        codeUnknown:'密码未知',
-        lastUpdate:'最后更新',
-        unknownDate:'日期未知',
-        communityCheck:'等待用户核实',
-        newCode:'输入新密码…',
-        submit:'提交',
-        history:'历史密码',
-        source:'来源',
-        hours:'开放时间',
-        hoursUnknown:'开放时间未知',
-        pmrYes:'♿ 无障碍',
-        pmrNo:'♿ 非无障碍',
-        pmrUnknown:'♿ 无障碍信息未知',
-        baby:'👶 换尿布台',
-        priceUnknown:'价格未知',
-        memberUnknown:'会员条件未知',
-        locationUnknown:'具体位置未知',
-        addressUnknown:'地址未知',
-        countUnknown:'厕所数量未知',
-        publicNone:'没有找到公共场所厕所。',
-        commerceNone:'没有找到商场厕所。',
-        stationNone:'没有找到车站厕所。',
-        noResult:'没有搜索结果。',
-        loadingPublic:'正在加载公共厕所…',
-        loadingMetro:'正在加载 RATP / SNCF 厕所…',
-        submitted:'✓ 已提交；新旧密码都会保留。',
-        enterCode:'请输入新密码。',
-        footer:'厕所密码可能会变化。这里的信息主要来自社区，请到现场再次确认；如果餐厅小票上印有密码，以小票上的最新密码为准。'
-      }
-    };
-
-    function t(key){ return (i18n[lang] && i18n[lang][key]) || i18n.fr[key] || key; }
-
-    function categoryLabel(id){ return t(id); }
-
-    function updateLanguageUI(){
-      document.documentElement.lang = lang === 'cn' ? 'zh-CN' : lang;
-      document.getElementById('subtitle').textContent = t('subtitle');
-      document.getElementById('q').placeholder = t('search');
-      const sort = document.getElementById('sort');
-      sort.options[0].textContent = t('recent');
-      sort.options[1].textContent = t('brandSort');
-      document.getElementById('footerNote').textContent = t('footer');
-
-      document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
-      });
-
-      document.querySelectorAll('#categories .category').forEach(btn => {
-        btn.textContent = categoryLabel(btn.dataset.category);
-      });
-
-      document.querySelectorAll('#brands .brand').forEach(btn => {
-        if (btn.dataset.brand === 'Tous') btn.textContent = t('all');
-      });
-    }
     let publicToilets = [];
     let publicLoading = false;
     let publicLoadError = false;
@@ -584,13 +405,13 @@
     ];
 
     const categories = [
-      {id:'code'},
-      {id:'free'},
-      {id:'sanisette'},
-      {id:'metro'},
-      {id:'public'},
-      {id:'commerce'},
-      {id:'paid'}
+      {id:'code',label:'🔐 Toilettes à code'},
+      {id:'free',label:'🆓 Toilettes gratuites'},
+      {id:'sanisette',label:'⛲️ Sanisette gratuit'},
+      {id:'metro',label:'🚇 Toilettes métro'},
+      {id:'public',label:'🏛 Lieux publics'},
+      {id:'commerce',label:'🛍 Toilettes commerces'},
+      {id:'paid',label:'💶 Toilettes payantes'}
     ];
 
 
@@ -857,8 +678,7 @@
     categories.forEach(x => {
       const d = document.createElement('button');
       d.className = 'category' + (x.id === category ? ' active' : '');
-      d.dataset.category = x.id;
-      d.textContent = categoryLabel(x.id);
+      d.textContent = x.label;
       d.onclick = async () => {
         category = x.id;
         document.querySelectorAll('.category').forEach(z => z.classList.remove('active'));
@@ -879,8 +699,7 @@
     brands.forEach(x => {
       let d = document.createElement('button');
       d.className = 'brand' + (x === 'Tous' ? ' active' : '');
-      d.dataset.brand = x;
-      d.textContent = x === 'Tous' ? t('all') : x;
+      d.textContent = x;
       d.onclick = () => {
         brand = x;
         document.querySelectorAll('.brand').forEach(z => z.classList.remove('active'));
@@ -888,15 +707,6 @@
         render();
       };
       bEl.appendChild(d);
-    });
-
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.onclick = () => {
-        lang = btn.dataset.lang;
-        localStorage.setItem('wcParisLang', lang);
-        updateLanguageUI();
-        render();
-      };
     });
 
     document.getElementById('q').oninput = render;
@@ -1015,7 +825,7 @@
           tariff:r.tarif_gratuit_payant || 'Tarif non renseigné',
           pmr:r.accessibilite_pmr === 'oui' ? true : (r.accessibilite_pmr === 'non' ? false : null),
           count:null,
-          location:r.localisation || t('locationUnknown'),
+          location:r.localisation || 'Localisation non renseignée',
           source:'RATP / Île-de-France Mobilités Open Data',
           _latlng:getLatLng({geo_point_2d:r.coord_geo})
         }));
@@ -1091,11 +901,7 @@
         }
 
         document.getElementById('stats').textContent =
-          lang === 'cn'
-            ? arr.length + ' 个地点 · ' + arr.filter(x => x.c).length + ' 个已知密码 · Paris'
-            : lang === 'en'
-              ? arr.length + ' places · ' + arr.filter(x => x.c).length + ' known codes · Paris'
-              : arr.length + ' lieux · ' + arr.filter(x => x.c).length + ' codes connus · Paris';
+          arr.length + ' lieux · ' + arr.filter(x => x.c).length + ' codes connus · Paris';
         updateMap(arr, true);
         geocodeCodeToilets(arr);
 
@@ -1129,8 +935,8 @@
 
                 <div class="meta">
                   ${latest
-                    ? t('lastUpdate') + ' : ' + (latest.date ? new Date(latest.date).toLocaleString('fr-FR') : t('unknownDate'))
-                    : t('communityCheck')}
+                    ? 'Dernière mise à jour : ' + (latest.date ? new Date(latest.date).toLocaleString('fr-FR') : 'date inconnue')
+                    : 'Besoin d’une vérification communautaire'}
                 </div>
 
                 <div class="update-form">
@@ -1138,19 +944,19 @@
                     id="update-${data.indexOf(x)}"
                     maxlength="30"
                     autocomplete="off"
-                    placeholder="${t('newCode')}"
+                    placeholder="Nouveau code…"
                     aria-label="Nouveau code pour ${x.b} ${x.a}">
-                  <button type="button" onclick="submitUpdate(${data.indexOf(x)})">${t('submit')}</button>
+                  <button type="button" onclick="submitUpdate(${data.indexOf(x)})">提交</button>
                 </div>
                 <div class="submitted" id="submitted-${data.indexOf(x)}"></div>
 
                 ${history.length ? `
                   <div class="history">
-                    <div class="history-title">${t('history')}</div>
+                    <div class="history-title">Historique des codes</div>
                     ${history.map(h => `
                       <div class="history-item">
                         <span class="history-code">${h.code}</span>
-                        <span>${h.date ? new Date(h.date).toLocaleDateString('fr-FR') : t('unknownDate')} · ${h.label}</span>
+                        <span>${h.date ? new Date(h.date).toLocaleDateString('fr-FR') : 'date inconnue'} · ${h.label}</span>
                       </div>
                     `).join('')}
                   </div>
@@ -1172,9 +978,7 @@
           .sort((a,b) => a.name.localeCompare(b.name));
 
         document.getElementById('stats').textContent =
-          lang === 'cn' ? arr.length + ' 个有厕所的公共场所 · Paris'
-          : lang === 'en' ? arr.length + ' public places with toilets · Paris'
-          : arr.length + ' lieux publics avec toilettes · Paris';
+          arr.length + ' lieux publics avec toilettes · Paris';
 
         updateMap(arr, false);
 
@@ -1190,19 +994,19 @@
               </div>
 
               <div class="meta" style="margin-top:16px">
-                ${x.hours ? t('hours') + ' : ' + x.hours : t('hoursUnknown')}
+                ${x.hours ? 'Horaires : ' + x.hours : 'Horaires non renseignés'}
               </div>
 
               <div class="meta">
-                ${x.pmr === true ? t('pmrYes') : 'Accessibilité non renseignée'}
+                ${x.pmr === true ? '♿ Accessible PMR' : 'Accessibilité non renseignée'}
               </div>
 
               <div class="access-note">🚻 ${x.access}</div>
 
-              <div class="source">${t('source')} : ${x.source}</div>
+              <div class="source">Source : ${x.source}</div>
             </article>
           `).join('')
-          : '<div class="empty">' + t('publicNone') + '</div>';
+          : '<div class="empty">Aucun lieu public trouvé.</div>';
         return;
       }
 
@@ -1215,9 +1019,7 @@
           .sort((a,b) => a.name.localeCompare(b.name));
 
         document.getElementById('stats').textContent =
-          lang === 'cn' ? arr.length + ' 个有厕所的商场'
-          : lang === 'en' ? arr.length + ' shopping centers with toilets'
-          : arr.length + ' centres commerciaux avec toilettes';
+          arr.length + ' centres commerciaux avec toilettes';
 
         updateMap(arr, false);
 
@@ -1232,20 +1034,20 @@
                 <div class="logo">${x.price}</div>
               </div>
 
-              <div class="meta" style="margin-top:16px">🕒 ${x.hours || t('hoursUnknown')}</div>
+              <div class="meta" style="margin-top:16px">🕒 ${x.hours || 'Horaires non renseignés'}</div>
               <div class="access-note">🎟 ${x.member || 'Conditions membre non renseignées'}</div>
-              <div class="meta" style="margin-top:8px">📍 ${x.access || t('locationUnknown')}</div>
-              <div class="meta">${x.pmr === true ? t('pmrYes') : t('pmrUnknown')}</div>
-              <div class="source">${t('source')} : ${x.source}</div>
+              <div class="meta" style="margin-top:8px">📍 ${x.access || 'Localisation non renseignée'}</div>
+              <div class="meta">${x.pmr === true ? '♿ Accessible PMR' : '♿ PMR non renseigné'}</div>
+              <div class="source">Source : ${x.source}</div>
             </article>
           `).join('')
-          : '<div class="empty">' + t('commerceNone') + '</div>';
+          : '<div class="empty">Aucun centre commercial trouvé.</div>';
         return;
       }
 
       if (category === 'metro') {
         if (metroLoading) {
-          document.getElementById('stats').textContent = t('loadingMetro');
+          document.getElementById('stats').textContent = 'Chargement des toilettes RATP / SNCF…';
           document.getElementById('grid').innerHTML = '<div class="empty">Chargement des toilettes des stations et gares…</div>';
           return;
         }
@@ -1261,9 +1063,7 @@
           .sort((a,b) => (a.station || '').localeCompare(b.station || ''));
 
         document.getElementById('stats').textContent =
-          lang === 'cn' ? arr.length + ' 个有厕所的地铁/火车站 · RATP + SNCF'
-          : lang === 'en' ? arr.length + ' stations with toilets · RATP + SNCF'
-          : arr.length + ' stations / gares avec toilettes · RATP + SNCF';
+          arr.length + ' stations / gares avec toilettes · RATP + SNCF';
 
         updateMap(arr.map(x => ({
           ...x,
@@ -1283,32 +1083,32 @@
               </div>
 
               <div class="meta" style="margin-top:16px">
-                📍 ${x.location || t('locationUnknown')}
+                📍 ${x.location || 'Localisation non renseignée'}
               </div>
 
               <div class="meta">
-                ${x.pmr === true ? t('pmrYes') : (x.pmr === false ? t('pmrNo') : t('pmrUnknown'))}
+                ${x.pmr === true ? '♿ Accessible PMR' : (x.pmr === false ? '♿ Non PMR' : '♿ PMR non renseigné')}
               </div>
 
               <div class="access-note">
-                🚻 ${x.count ? x.count + ' toilettes / cabines signalées' : t('countUnknown')}
+                🚻 ${x.count ? x.count + ' toilettes / cabines signalées' : 'Nombre de toilettes non renseigné'}
               </div>
 
               ${x.access ? '<div class="meta" style="margin-top:8px">' + x.access + '</div>' : ''}
 
-              <div class="source">${t('source')} : ${x.source}</div>
+              <div class="source">Source : ${x.source}</div>
             </article>
           `).join('')
           : '<div class="empty">' +
               (metroLoadError
                 ? 'Impossible de charger les données RATP pour le moment. Les gares SNCF connues restent affichées.'
-                : t('stationNone')) +
+                : 'Aucune station ou gare trouvée.') +
             '</div>';
         return;
       }
 
       if (publicLoading) {
-        document.getElementById('stats').textContent = t('loadingPublic');
+        document.getElementById('stats').textContent = 'Chargement des toilettes publiques…';
         document.getElementById('grid').innerHTML = '<div class="empty">Chargement des données de la Ville de Paris…</div>';
         return;
       }
@@ -1319,15 +1119,13 @@
 
       arr.sort((a,b) => a.address.localeCompare(b.address));
 
-      const countLabel =
-        lang === 'cn'
-          ? (category === 'sanisette' ? ' 个免费 Sanisette' : category === 'free' ? ' 个免费厕所' : ' 个付费厕所')
-          : lang === 'en'
-            ? (category === 'sanisette' ? ' free sanisettes' : category === 'free' ? ' free toilets' : ' paid toilets')
-            : (category === 'sanisette' ? ' sanisettes gratuites' : category === 'free' ? ' toilettes gratuites' : ' toilettes payantes');
+      const categoryLabel =
+        category === 'sanisette' ? ' sanisettes gratuites' :
+        category === 'free' ? ' toilettes gratuites' :
+        ' toilettes payantes';
 
       document.getElementById('stats').textContent =
-        arr.length + countLabel + ' · Paris';
+        arr.length + categoryLabel + ' · Paris';
       updateMap(arr, false);
 
       document.getElementById('grid').innerHTML = arr.length
@@ -1336,23 +1134,23 @@
             <div class="top">
               <div>
                 <div class="name">${x.name}</div>
-                <div class="addr">${x.address || t('addressUnknown')}</div>
+                <div class="addr">${x.address || 'Adresse non renseignée'}</div>
               </div>
               <div class="logo">${category === 'sanisette' ? 'SANISSETTE' : (category === 'free' ? 'GRATUIT' : 'PAYANT')}</div>
             </div>
 
             <div class="meta" style="margin-top:16px">
-              ${x.hours ? t('hours') + ' : ' + x.hours : t('hoursUnknown')}
+              ${x.hours ? 'Horaires : ' + x.hours : 'Horaires non renseignés'}
             </div>
 
             <div class="meta">
-              ${x.pmr === true ? t('pmrYes') : (x.pmr === false ? 'Non indiqué PMR' : 'Accessibilité non renseignée')}
-              ${x.baby ? ' · ' + t('baby') : ''}
+              ${x.pmr === true ? '♿ Accessible PMR' : (x.pmr === false ? 'Non indiqué PMR' : 'Accessibilité non renseignée')}
+              ${x.baby ? ' · 👶 Table à langer' : ''}
             </div>
 
             ${x.access ? '<div class="access-note">⚠️ ' + x.access + '</div>' : ''}
 
-            <div class="source">${t('source')} : ${x.source}</div>
+            <div class="source">Source : ${x.source}</div>
           </article>
         `).join('')
         : '<div class="empty">' +
@@ -1368,7 +1166,7 @@
       const code = input.value.trim();
 
       if (!code) {
-        msg.textContent = t('enterCode');
+        msg.textContent = '请输入新密码。';
         return;
       }
 
@@ -1382,11 +1180,10 @@
       localStorage.setItem('wcParisSubmissions', JSON.stringify(submissions));
 
       input.value = '';
-      msg.textContent = t('submitted');
+      msg.textContent = '✓ 已提交；旧密码和新密码都会保留。';
       render();
     }
 
-    updateLanguageUI();
     render();
   </script>
 </body>
