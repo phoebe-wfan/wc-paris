@@ -54,6 +54,24 @@
       margin:0 0 7px;
     }
 
+    .site-brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .site-logo{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      flex:0 0 48px;
+      border-radius:8px;
+    }
+
+    .site-brand h1{
+      margin:0;
+    }
+
     .sub{
       color:var(--muted);
       font-size:14px;
@@ -284,7 +302,10 @@
 <body>
   <div id="app">
     <header>
-      <h1>🚻 WC Paris</h1>
+      <div class="site-brand">
+        <img class="site-logo" src="/wc-paris-icon.svg" alt="WC Paris">
+        <h1>WC Paris</h1>
+      </div>
 
       <div class="sub">
         Toilettes à code, gratuites et payantes à Paris.
