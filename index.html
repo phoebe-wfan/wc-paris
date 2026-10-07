@@ -470,6 +470,7 @@
       attribution:'&copy; OpenStreetMap contributors'
     }).addTo(map);
     const markerLayer = L.layerGroup().addTo(map);
+    let geocodeBusy = false;
 
     function getLatLng(r){
       const p = r.geo_point_2d || r.coordonnees_geo || r.coordinates || null;
@@ -492,13 +493,57 @@
         const ll = x._latlng || null;
         if (!ll) return;
         const title = isCode ? (x.b + ' — ' + x.a) : (x.name + ' — ' + x.address);
-        L.marker(ll).addTo(markerLayer).bindPopup(title);
+        const extra = isCode && x.c ? '<br><strong>Code : ' + x.c + '</strong>' : '';
+        L.marker(ll).addTo(markerLayer).bindPopup(title + extra);
         pts.push(ll);
       });
 
       if (pts.length === 1) map.setView(pts[0], 16);
       else if (pts.length > 1) map.fitBounds(pts, {padding:[24,24], maxZoom:15});
       else map.setView([48.8566,2.3522],12);
+    }
+
+    function geocodeCache(){
+      try { return JSON.parse(localStorage.getItem('wcParisGeocodes') || '{}'); }
+      catch(e){ return {}; }
+    }
+
+    async function geocodeCodeToilets(items){
+      if (geocodeBusy) return;
+      const missing = items.filter(x => !x._latlng);
+      if (!missing.length) return;
+
+      geocodeBusy = true;
+      const cache = geocodeCache();
+
+      for (const x of missing) {
+        const key = x.b + '|' + x.a;
+
+        if (cache[key]) {
+          x._latlng = cache[key];
+          continue;
+        }
+
+        try {
+          const query = encodeURIComponent(x.b + ', ' + x.a + ', France');
+          const res = await fetch(
+            'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=fr&q=' + query,
+            {headers:{'Accept':'application/json'}}
+          );
+          const found = await res.json();
+          if (found && found[0]) {
+            x._latlng = [Number(found[0].lat), Number(found[0].lon)];
+            cache[key] = x._latlng;
+            localStorage.setItem('wcParisGeocodes', JSON.stringify(cache));
+            updateMap(items, true);
+          }
+        } catch(e) {}
+
+        await new Promise(r => setTimeout(r, 1100));
+      }
+
+      geocodeBusy = false;
+      updateMap(items, true);
     }
 
     async function loadPublicToilets() {
@@ -554,6 +599,7 @@
         document.getElementById('stats').textContent =
           arr.length + ' lieux · ' + arr.filter(x => x.c).length + ' codes connus · Paris';
         updateMap(arr, true);
+        geocodeCodeToilets(arr);
 
         const submissions = JSON.parse(localStorage.getItem('wcParisSubmissions') || '[]');
 
