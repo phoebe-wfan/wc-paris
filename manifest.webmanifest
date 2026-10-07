@@ -1,0 +1,19 @@
+{
+  "name": "WC Paris",
+  "short_name": "WC Paris",
+  "description": "Toilettes à code, gratuites et payantes à Paris.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f7f4",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/wc-paris-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
