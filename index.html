@@ -390,6 +390,9 @@
     let publicToilets = [];
     let publicLoading = false;
     let publicLoadError = false;
+    let metroToilets = [];
+    let metroLoading = false;
+    let metroLoadError = false;
 
     const brands = [
       'Tous',
@@ -405,7 +408,50 @@
       {id:'code',label:'🔐 Toilettes à code'},
       {id:'free',label:'🆓 Toilettes gratuites'},
       {id:'sanisette',label:'⛲️ Sanisette gratuit'},
+      {id:'metro',label:'🚇 Toilettes métro'},
       {id:'paid',label:'💶 Toilettes payantes'}
+    ];
+
+    const sncfToilets = [
+      {
+        kind:'metro',
+        operator:'SNCF',
+        station:'Paris Gare de Lyon',
+        line:'SNCF / correspondances métro 1, 14',
+        access:'Toilettes signalées dans les services de la gare',
+        tariff:'Tarif non renseigné',
+        pmr:null,
+        count:null,
+        location:'4 place Louis-Armand, 75012 Paris',
+        source:'SNCF TER',
+        _latlng:[48.8448,2.3735]
+      },
+      {
+        kind:'metro',
+        operator:'SNCF',
+        station:'Paris Bercy Bourgogne-Pays d’Auvergne',
+        line:'SNCF / correspondances métro 6, 14',
+        access:'Toilettes signalées dans les services de la gare',
+        tariff:'Tarif non renseigné',
+        pmr:null,
+        count:null,
+        location:'48 bis boulevard de Bercy, 75012 Paris',
+        source:'SNCF TER',
+        _latlng:[48.8393,2.3827]
+      },
+      {
+        kind:'metro',
+        operator:'RATP',
+        station:'Trocadéro',
+        line:'Métro 6, 9',
+        access:'Sortie 1, avenue du Président-Wilson',
+        tariff:'Payant · 1 €',
+        pmr:null,
+        count:9,
+        location:'Trocadéro, Paris 16e',
+        source:'RATP',
+        _latlng:[48.8630,2.2870]
+      }
     ];
 
     const extraToilets = [
@@ -432,8 +478,11 @@
         d.classList.add('active');
         bEl.style.display = category === 'code' ? 'flex' : 'none';
         document.getElementById('sort').style.display = category === 'code' ? '' : 'none';
-        if (category !== 'code' && !publicToilets.length && !publicLoading) {
+        if ((category === 'free' || category === 'sanisette' || category === 'paid') && !publicToilets.length && !publicLoading) {
           await loadPublicToilets();
+        }
+        if (category === 'metro' && !metroToilets.length && !metroLoading) {
+          await loadMetroToilets();
         }
         render();
       };
@@ -544,6 +593,54 @@
 
       geocodeBusy = false;
       updateMap(items, true);
+    }
+
+    async function loadMetroToilets() {
+      metroLoading = true;
+      metroLoadError = false;
+      render();
+
+      try {
+        const url = 'https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/sanitaires-reseau-ratp/records?limit=100';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+
+        metroToilets = (json.results || []).map(r => ({
+          kind:'metro',
+          operator:'RATP',
+          station:r.station || 'Station RATP',
+          line:r.ligne ? 'Ligne ' + r.ligne : 'Ligne non renseignée',
+          access:[
+            r.accessible_au_public ? 'Accessible au public : ' + r.accessible_au_public : null,
+            r.acces_passe_navigo_ou_ticket_t ? 'Titre de transport : ' + r.acces_passe_navigo_ou_ticket_t : null
+          ].filter(Boolean).join(' · '),
+          tariff:r.tarif_gratuit_payant || 'Tarif non renseigné',
+          pmr:r.accessibilite_pmr === 'oui' ? true : (r.accessibilite_pmr === 'non' ? false : null),
+          count:null,
+          location:r.localisation || 'Localisation non renseignée',
+          source:'RATP / Île-de-France Mobilités Open Data',
+          _latlng:getLatLng({geo_point_2d:r.coord_geo})
+        }));
+
+        // Keep current RATP information that is more recent than the legacy open-data row when known.
+        const troc = metroToilets.find(x => normalizeText(x.station).includes('trocadero'));
+        if (troc) {
+          troc.count = 9;
+          troc.tariff = 'Payant · 1 €';
+          troc.access = 'Sortie 1, avenue du Président-Wilson · 8h–20h';
+          troc.source = 'RATP · information 2026';
+        }
+
+        metroToilets.push(...sncfToilets.filter(x =>
+          !metroToilets.some(y => normalizeText(y.operator + y.station) === normalizeText(x.operator + x.station))
+        ));
+      } catch (e) {
+        metroLoadError = true;
+        metroToilets = [...sncfToilets];
+      } finally {
+        metroLoading = false;
+      }
     }
 
     async function loadPublicToilets() {
@@ -663,6 +760,72 @@
             `;
           }).join('')
           : '<div class="empty">Aucun résultat. Essaie un autre quartier ou une autre enseigne.</div>';
+        return;
+      }
+
+      if (category === 'metro') {
+        if (metroLoading) {
+          document.getElementById('stats').textContent = 'Chargement des toilettes RATP / SNCF…';
+          document.getElementById('grid').innerHTML = '<div class="empty">Chargement des toilettes des stations et gares…</div>';
+          return;
+        }
+
+        let arr = metroToilets
+          .filter(x => normalizeText(
+            (x.operator || '') + ' ' +
+            (x.station || '') + ' ' +
+            (x.line || '') + ' ' +
+            (x.location || '') + ' ' +
+            (x.tariff || '')
+          ).includes(q))
+          .sort((a,b) => (a.station || '').localeCompare(b.station || ''));
+
+        document.getElementById('stats').textContent =
+          arr.length + ' stations / gares avec toilettes · RATP + SNCF';
+
+        updateMap(arr.map(x => ({
+          ...x,
+          name:(x.operator || '') + ' · ' + (x.station || ''),
+          address:x.location || ''
+        })), false);
+
+        document.getElementById('grid').innerHTML = arr.length
+          ? arr.map(x => `
+            <article class="card">
+              <div class="top">
+                <div>
+                  <div class="name">${x.operator || 'Transport'} · ${x.station}</div>
+                  <div class="addr">${x.line || ''}</div>
+                </div>
+                <div class="logo">MÉTRO / GARE</div>
+              </div>
+
+              <div class="meta" style="margin-top:16px">
+                📍 ${x.location || 'Localisation non renseignée'}
+              </div>
+
+              <div class="meta">
+                💶 ${x.tariff || 'Tarif non renseigné'}
+              </div>
+
+              <div class="meta">
+                ${x.pmr === true ? '♿ Accessible PMR' : (x.pmr === false ? '♿ Non PMR' : '♿ PMR non renseigné')}
+              </div>
+
+              <div class="access-note">
+                🚻 ${x.count ? x.count + ' toilettes / cabines signalées' : 'Nombre de toilettes non renseigné'}
+              </div>
+
+              ${x.access ? '<div class="meta" style="margin-top:8px">' + x.access + '</div>' : ''}
+
+              <div class="source">Source : ${x.source}</div>
+            </article>
+          `).join('')
+          : '<div class="empty">' +
+              (metroLoadError
+                ? 'Impossible de charger les données RATP pour le moment. Les gares SNCF connues restent affichées.'
+                : 'Aucune station ou gare trouvée.') +
+            '</div>';
         return;
       }
 
