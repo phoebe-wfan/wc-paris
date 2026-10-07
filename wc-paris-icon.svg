@@ -1,9 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#111111"/>
-  <circle cx="166" cy="142" r="42" fill="#ffffff"/>
-  <circle cx="346" cy="142" r="42" fill="#ffffff"/>
-  <path d="M118 208c0-24 20-44 44-44h8c24 0 44 20 44 44v92h-26v124h-44V300h-26z" fill="#ffffff"/>
-  <path d="M298 208c0-24 20-44 44-44h8c24 0 44 20 44 44v92h-26v124h-44V300h-26z" fill="#ffffff"/>
-  <rect x="249" y="106" width="14" height="318" rx="7" fill="#ffffff" opacity=".9"/>
-  <text x="256" y="474" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="48" font-weight="700" fill="#ffffff">PARIS</text>
-</svg>
+<rect width="512" height="512" fill="#fff"/>
+<g fill="none" stroke="#000" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+<path d="M142 264V62H474V462H314"/>
+<path d="M34 310V164Q34 145 53 145H86Q105 145 105 164V310"/>
+<path d="M34 178H105"/>
+<path d="M105 292H250Q270 292 270 312H105"/>
+<path d="M34 310H270Q269 356 241 379Q219 398 183 401"/>
+<path d="M34 310Q34 345 70 361Q100 375 103 405Q106 430 87 461H226Q211 433 213 403"/>
+<path d="M350 108V136"/><path d="M341 136H359"/>
+<path d="M344 136Q343 232 327 286Q311 350 278 414Q267 436 256 461"/>
+<path d="M356 136Q357 232 373 286Q389 350 422 414Q433 436 444 461"/>
+<path d="M320 286H380"/><path d="M292 368H408"/>
+<path d="M306 461Q318 420 350 420Q382 420 394 461"/>
+<path d="M256 461H444"/>
+</g></svg>
