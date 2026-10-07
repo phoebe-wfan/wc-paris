@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#111111"/>
+  <circle cx="166" cy="142" r="42" fill="#ffffff"/>
+  <circle cx="346" cy="142" r="42" fill="#ffffff"/>
+  <path d="M118 208c0-24 20-44 44-44h8c24 0 44 20 44 44v92h-26v124h-44V300h-26z" fill="#ffffff"/>
+  <path d="M298 208c0-24 20-44 44-44h8c24 0 44 20 44 44v92h-26v124h-44V300h-26z" fill="#ffffff"/>
+  <rect x="249" y="106" width="14" height="318" rx="7" fill="#ffffff" opacity=".9"/>
+  <text x="256" y="474" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="48" font-weight="700" fill="#ffffff">PARIS</text>
+</svg>
