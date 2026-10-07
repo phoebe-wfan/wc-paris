@@ -1,9 +1,10 @@
-const CACHE_NAME = 'wc-paris-v2';
+const CACHE_NAME = 'wc-paris-v3';
 const APP_SHELL = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
   '/wc-paris-icon.svg',
+  '/apple-touch-icon.png',
   '/mentions-legales.html',
   '/confidentialite.html'
 ];
