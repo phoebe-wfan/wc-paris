@@ -823,15 +823,11 @@
                   <div class="name">${x.operator || 'Transport'} · ${x.station}</div>
                   <div class="addr">${x.line || ''}</div>
                 </div>
-                <div class="logo">STATION / GARE</div>
+                <div class="logo">${x.tariff || 'Tarif ?'}</div>
               </div>
 
               <div class="meta" style="margin-top:16px">
                 📍 ${x.location || 'Localisation non renseignée'}
-              </div>
-
-              <div class="meta">
-                💶 ${x.tariff || 'Tarif non renseigné'}
               </div>
 
               <div class="meta">
