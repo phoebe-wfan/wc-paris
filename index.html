@@ -779,69 +779,6 @@
     if (!['en','zh'].includes(lang)) lang = 'en';
 
     const translations = {
-      fr:{
-        subtitle:'Toilettes à code, gratuites et payantes à Paris.',
-        search:'Rechercher une adresse, un quartier, un lieu…',
-        sortRecent:'Plus récemment vérifié',
-        sortBrand:'Enseigne',
-        all:'Tous',
-        nearby:'🗺️ WC autour de moi',
-        catCode:'Toilettes à code',
-        catFree:'Toilettes gratuites',
-        catSanisette:'Sanisettes gratuites',
-        catMetro:'Toilettes métro',
-        catPublic:'Lieux publics',
-        catCommerce:'Toilettes commerces',
-        catPaid:'Toilettes payantes',
-        places:'lieux',
-        knownCodes:'codes connus',
-        unknownCode:'Code inconnu',
-        lastUpdate:'Dernière mise à jour',
-        unknownDate:t('unknownDate'),
-        needsCheck:t('needsCheck'),
-        newCode:'Nouveau code…',
-        history:'Historique des codes',
-        userSubmitted:'soumis utilisateur',
-        noResult:'Aucun résultat. Essaie un autre quartier ou une autre enseigne.',
-        publicPlaces:'lieux publics avec toilettes',
-        hours:'Horaires',
-        hoursUnknown:t('hoursUnknown'),
-        accessible:'Accessible PMR',
-        accessibilityUnknown:t('accessibilityUnknown'),
-        source:'Source',
-        shopping:'centres commerciaux avec toilettes',
-        memberUnknown:t('memberUnknown'),
-        locationUnknown:t('locationUnknown'),
-        pmrUnknown:'PMR non renseigné',
-        loadingTransit:t('loadingTransit'),
-        loadingTransitGrid:'Chargement des toilettes des stations et gares…',
-        transitCount:'stations / gares avec toilettes',
-        paid:t('paid'),
-        free:t('free'),
-        toiletsReported:'toilettes / cabines signalées',
-        transitUnavailable:t('transitUnavailable'),
-        noTransit:t('noTransit'),
-        loadingPublic:t('loadingPublic'),
-        loadingPublicGrid:'Chargement des données de la Ville de Paris…',
-        sanisettes:'sanisettes gratuites',
-        freeToilets:'toilettes gratuites',
-        paidToilets:'toilettes payantes',
-        addressUnknown:t('addressUnknown'),
-        baby:'Table à langer',
-        publicUnavailable:t('publicUnavailable'),
-        noCategory:t('noCategory'),
-        enterCode:'Saisis un nouveau code.',
-        saved:'✓ Enregistré. L’ancien code et le nouveau sont conservés.',
-        distance:'À',
-        youAreHere:'Vous êtes ici',
-        geoUnavailable:t('geoUnavailable'),
-        locating:t('locating'),
-        located:t('located'),
-        geoError:t('geoError'),
-        communityNote:'Les codes peuvent changer. Un code affiché ici est une information communautaire et doit être vérifié sur place. Si le restaurant imprime un code sur le ticket, celui-ci prévaut.',
-        legal:'Mentions légales',
-        privacy:'Confidentialité & cookies'
-      },
       en:{
         subtitle:'Toilet codes, free and paid toilets in Paris.',
         search:'Search an address, neighborhood or place…',
@@ -1035,6 +972,14 @@
         render();
       };
       bEl.appendChild(d);
+    });
+
+    document.querySelectorAll('.language-switcher button').forEach(btn => {
+      btn.onclick = () => {
+        lang = btn.dataset.lang;
+        localStorage.setItem('wcParisLang', lang);
+        applyLanguage();
+      };
     });
 
     document.getElementById('q').oninput = render;
