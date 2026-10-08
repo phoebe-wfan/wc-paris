@@ -1023,6 +1023,24 @@
         return (da === null ? Infinity : da) - (db === null ? Infinity : db);
       });
     }
+    function isCoveredByDedicatedCategory(item) {
+      const itemText = normalizeText((item.name || '') + ' ' + (item.address || ''));
+
+      const dedicated = [
+        ...publicPlaceToilets.map(x => ({name:x.name,address:x.address})),
+        ...commerceToilets.map(x => ({name:x.name,address:x.address})),
+        ...sncfToilets.map(x => ({name:x.station,address:x.location}))
+      ];
+
+      return dedicated.some(x => {
+        const otherText = normalizeText((x.name || '') + ' ' + (x.address || ''));
+        return itemText && otherText && (
+          itemText === otherText ||
+          normalizeText(item.address || '') === normalizeText(x.address || '')
+        );
+      });
+    }
+
 
     const map = L.map('map').setView([48.8566, 2.3522], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1515,6 +1533,7 @@
 
       let arr = [...publicToilets, ...extraToilets]
         .filter(x => x.kind === category)
+        .filter(x => category !== 'free' || !isCoveredByDedicatedCategory(x))
         .filter(x => normalizeText(x.name + ' ' + x.address + ' ' + (x.access || '')).includes(q));
 
       arr = userLatLng
