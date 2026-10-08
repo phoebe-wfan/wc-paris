@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wc-paris-v17';
+const CACHE_NAME = 'wc-paris-v18';
 const APP_SHELL = [
   '/',
   '/index.html',
