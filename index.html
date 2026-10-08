@@ -60,9 +60,10 @@
     }
 
     h1{
-      font-size:30px;
+      font-size:26px;
+      line-height:1;
       letter-spacing:-.04em;
-      margin:0 0 7px;
+      margin:0;
     }
 
     .header-top{
@@ -73,13 +74,10 @@
     }
 
     .brand-block{
-      min-width:0;
-    }
-
-    .site-brand{
       display:flex;
       align-items:center;
       gap:10px;
+      min-width:0;
     }
 
     .site-logo{
@@ -90,13 +88,21 @@
       border-radius:8px;
     }
 
-    .site-brand h1{
-      margin:0;
+    .brand-copy{
+      height:48px;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      align-items:flex-start;
     }
 
     .sub{
       color:var(--muted);
-      font-size:14px;
+      font-size:13px;
+      line-height:1.15;
+      text-align:left;
+      white-space:nowrap;
     }
 
     .language-switcher{
@@ -393,7 +399,8 @@
     }
 
     @media(max-width:600px){
-      h1{font-size:25px}
+      h1{font-size:24px}
+      .sub{font-size:12px;white-space:normal;line-height:1.1}
       .grid{grid-template-columns:1fr}
       .header-top{align-items:flex-start}
       .bar{flex-wrap:wrap}
@@ -408,13 +415,12 @@
     <header>
       <div class="header-top">
         <div class="brand-block">
-          <div class="site-brand">
-            <img class="site-logo" src="/wc-paris-icon.svg" alt="WC Paris">
+          <img class="site-logo" src="/wc-paris-icon.svg" alt="WC Paris">
+          <div class="brand-copy">
             <h1>WC Paris</h1>
-          </div>
-
-          <div class="sub" id="subtitle">
-            Toilettes à code, gratuites et payantes à Paris.
+            <div class="sub" id="subtitle">
+              Toilettes à code, gratuites et payantes à Paris.
+            </div>
           </div>
         </div>
 
