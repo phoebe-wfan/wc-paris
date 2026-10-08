@@ -376,6 +376,41 @@
       color:var(--text);
     }
 
+    .history-main{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .code-status{
+      margin-top:4px;
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .code-status.verified{color:#2f7a42}
+    .code-status.pending{color:var(--muted)}
+    .code-status.disputed{color:#a56a00}
+
+    .code-actions{
+      display:flex;
+      gap:6px;
+      margin-top:7px;
+      flex-wrap:wrap;
+    }
+
+    .code-actions button{
+      padding:6px 8px;
+      font-size:11px;
+      border-radius:9px;
+    }
+
+    .code-actions button:disabled{
+      opacity:.45;
+      cursor:default;
+    }
+
     .verify{
       font-size:11px;
       margin-top:10px;
@@ -854,6 +889,13 @@
         newCode:'New code…',
         history:'Code history',
         userSubmitted:'submitted by user',
+        verifiedValid:'Verified valid',
+        awaitingVerification:'Awaiting verification',
+        reportedInvalid:'Reported not working · awaiting reconfirmation',
+        confirmValid:'✅ Confirm valid',
+        reportInvalid:'❌ Doesn’t work',
+        cannotSelfVerify:'You cannot verify your own submission',
+        alreadyVoted:'You already voted on this code',
         noResult:'No results. Try another neighborhood or brand.',
         publicPlaces:'public places with toilets',
         hours:'Hours',
@@ -883,7 +925,7 @@
         publicUnavailable:'Public toilet data is temporarily unavailable.',
         noCategory:'No results in this category.',
         enterCode:'Enter a new code.',
-        saved:'✓ Saved. The old and new codes are both kept.',
+        saved:'✓ Submitted. Waiting for another user to verify it.',
         distance:'About',
         youAreHere:'You are here',
         geoUnavailable:'Geolocation is not available on this device.',
@@ -918,6 +960,13 @@
         newCode:'新密码…',
         history:'密码历史',
         userSubmitted:'用户提交',
+        verifiedValid:'验证有效',
+        awaitingVerification:'等待验证',
+        reportedInvalid:'有人报告失效 · 等待重新验证',
+        confirmValid:'✅ 验证有效',
+        reportInvalid:'❌ 无效',
+        cannotSelfVerify:'不能验证自己提交的密码',
+        alreadyVoted:'你已经对这个密码操作过了',
         noResult:'没有结果，请尝试其他街区或品牌。',
         publicPlaces:'个有厕所的公共场所',
         hours:'开放时间',
@@ -947,7 +996,7 @@
         publicUnavailable:'暂时无法加载公共厕所数据。',
         noCategory:'此分类暂无结果。',
         enterCode:'请输入新密码。',
-        saved:'✓ 已保存，新旧密码都会保留。',
+        saved:'✓ 已提交，等待其他用户验证。',
         distance:'约',
         youAreHere:'你在这里',
         geoUnavailable:'此设备不支持定位。',
@@ -1322,6 +1371,127 @@
       }
     }
 
+    function getDeviceId() {
+      let id = localStorage.getItem('wcParisDeviceId');
+      if (!id) {
+        id = 'dev-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,10);
+        localStorage.setItem('wcParisDeviceId', id);
+      }
+      return id;
+    }
+
+    function codeEntryId(brand,address,code,submittedAt='seed') {
+      return encodeURIComponent([brand,address,code,submittedAt].join('|'));
+    }
+
+    function getCodeVotes() {
+      try { return JSON.parse(localStorage.getItem('wcParisCodeVotes') || '{}'); }
+      catch(e) { return {}; }
+    }
+
+    function saveCodeVotes(votes) {
+      localStorage.setItem('wcParisCodeVotes', JSON.stringify(votes));
+    }
+
+    function codeState(entry) {
+      const votes = getCodeVotes()[entry.id] || {};
+      const confirmations = Array.isArray(votes.confirmations) ? votes.confirmations : [];
+      const invalidReports = Array.isArray(votes.invalidReports) ? votes.invalidReports : [];
+
+      if (entry.seed) {
+        return {
+          status: invalidReports.length && (!votes.lastConfirmedAt || (votes.lastInvalidAt || '') > votes.lastConfirmedAt)
+            ? 'disputed' : 'verified',
+          verifiedAt: votes.lastConfirmedAt || entry.verifiedAt || null,
+          confirmations,
+          invalidReports
+        };
+      }
+
+      if (votes.lastConfirmedAt && (!votes.lastInvalidAt || votes.lastConfirmedAt >= votes.lastInvalidAt)) {
+        return {status:'verified', verifiedAt:votes.lastConfirmedAt, confirmations, invalidReports};
+      }
+      if (votes.lastInvalidAt) {
+        return {status:'disputed', verifiedAt:null, confirmations, invalidReports};
+      }
+      return {status:'pending', verifiedAt:null, confirmations, invalidReports};
+    }
+
+    function codeStatusHtml(entry) {
+      const state = codeState(entry);
+      if (state.status === 'verified') {
+        const date = state.verifiedAt ? new Date(state.verifiedAt).toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-GB') : t('unknownDate');
+        return '<div class="code-status verified">✅ ' + date + ' · ' + t('verifiedValid') + '</div>';
+      }
+      if (state.status === 'disputed') {
+        return '<div class="code-status disputed">⚠️ ' + t('reportedInvalid') + '</div>';
+      }
+      return '<div class="code-status pending">⏳ ' + t('awaitingVerification') + '</div>';
+    }
+
+    function codeActionsHtml(entry) {
+      const deviceId = getDeviceId();
+      const state = codeState(entry);
+      const selfSubmitted = !entry.seed && entry.submitterDevice === deviceId;
+      const alreadyConfirmed = state.confirmations.includes(deviceId);
+      const alreadyInvalid = state.invalidReports.includes(deviceId);
+
+      return '<div class="code-actions">' +
+        '<button type="button" onclick="confirmCodeValid(\'' + entry.id + '\')" ' +
+          ((selfSubmitted || alreadyConfirmed) ? 'disabled' : '') + '>' +
+          (selfSubmitted ? t('cannotSelfVerify') : t('confirmValid')) +
+        '</button>' +
+        '<button type="button" onclick="reportCodeInvalid(\'' + entry.id + '\')" ' +
+          (alreadyInvalid ? 'disabled' : '') + '>' + t('reportInvalid') + '</button>' +
+      '</div>';
+    }
+
+    function findCodeEntryById(id) {
+      for (const x of data) {
+        if (x.c) {
+          const seedId = codeEntryId(x.b,x.a,x.c,'seed');
+          if (seedId === id) return {id:seedId,brand:x.b,address:x.a,code:x.c,seed:true,verifiedAt:x.v || '2026-10-08'};
+        }
+      }
+      const submissions = JSON.parse(localStorage.getItem('wcParisSubmissions') || '[]');
+      const s = submissions.find(s => (s.id || codeEntryId(s.brand,s.address,s.code,s.submittedAt)) === id);
+      if (!s) return null;
+      return {...s,id:s.id || codeEntryId(s.brand,s.address,s.code,s.submittedAt),seed:false};
+    }
+
+    function confirmCodeValid(id) {
+      const entry = findCodeEntryById(id);
+      if (!entry) return;
+      const deviceId = getDeviceId();
+      if (!entry.seed && entry.submitterDevice === deviceId) return;
+
+      const votes = getCodeVotes();
+      const row = votes[id] || {confirmations:[],invalidReports:[]};
+      row.confirmations = Array.isArray(row.confirmations) ? row.confirmations : [];
+      row.invalidReports = Array.isArray(row.invalidReports) ? row.invalidReports : [];
+      if (!row.confirmations.includes(deviceId)) row.confirmations.push(deviceId);
+      row.lastConfirmedAt = new Date().toISOString();
+      votes[id] = row;
+      saveCodeVotes(votes);
+      render();
+    }
+
+    function reportCodeInvalid(id) {
+      const entry = findCodeEntryById(id);
+      if (!entry) return;
+      const deviceId = getDeviceId();
+
+      const votes = getCodeVotes();
+      const row = votes[id] || {confirmations:[],invalidReports:[]};
+      row.confirmations = Array.isArray(row.confirmations) ? row.confirmations : [];
+      row.invalidReports = Array.isArray(row.invalidReports) ? row.invalidReports : [];
+      if (!row.invalidReports.includes(deviceId)) row.invalidReports.push(deviceId);
+      row.lastInvalidAt = new Date().toISOString();
+      votes[id] = row;
+      saveCodeVotes(votes);
+      render();
+    }
+
     function render() {
       const q = normalizeText(document.getElementById('q').value);
 
@@ -1348,14 +1518,32 @@
           ? arr.map(x => {
             const local = submissions
               .filter(s => s.brand === x.b && s.address === x.a)
-              .map(s => ({code:s.code,date:s.submittedAt,label:t('userSubmitted')}));
+              .map(s => ({
+                ...s,
+                id:s.id || codeEntryId(s.brand,s.address,s.code,s.submittedAt),
+                code:s.code,
+                submittedAt:s.submittedAt,
+                submitterDevice:s.submitterDevice || null,
+                seed:false
+              }));
 
             const history = [
-              ...(x.c ? [{code:x.c,date:x.v,label:x.s}] : []),
+              ...(x.c ? [{
+                id:codeEntryId(x.b,x.a,x.c,'seed'),
+                brand:x.b,
+                address:x.a,
+                code:x.c,
+                seed:true,
+                verifiedAt:x.v || '2026-10-08',
+                submittedAt:x.v || '2026-10-08'
+              }] : []),
               ...local
-            ].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+            ].sort((a,b)=>(b.submittedAt||'').localeCompare(a.submittedAt||''));
 
-            const latest = history[0] || null;
+            const verified = history
+              .filter(h => codeState(h).status === 'verified')
+              .sort((a,b)=>((codeState(b).verifiedAt || b.submittedAt || '').localeCompare(codeState(a).verifiedAt || a.submittedAt || '')));
+            const latest = verified[0] || history[0] || null;
 
             return `
               <article class="card">
@@ -1371,9 +1559,7 @@
                 <div class="code">${latest ? latest.code : '<span class="unknown">' + t('unknownCode') + '</span>'}</div>
 
                 <div class="meta">
-                  ${latest
-                    ? t('lastUpdate') + ' : ' + (latest.date ? new Date(latest.date).toLocaleString('fr-FR') : t('unknownDate'))
-                    : t('needsCheck')}
+                  ${latest ? codeStatusHtml(latest) : t('needsCheck')}
                 </div>
 
                 <div class="update-form">
@@ -1391,15 +1577,17 @@
                   <div class="history">
                     <div class="history-title">${t('history')}</div>
                     ${history.map(h => `
-                      <div class="history-item">
-                        <span class="history-code">${h.code}</span>
-                        <span>${h.date ? new Date(h.date).toLocaleDateString('fr-FR') : t('unknownDate')} · ${h.label}</span>
+                      <div class="history-item" style="display:block">
+                        <div class="history-main">
+                          <span class="history-code">${h.code}</span>
+                        </div>
+                        ${codeStatusHtml(h)}
+                        ${codeActionsHtml(h)}
                       </div>
                     `).join('')}
                   </div>
                 ` : ''}
 
-                <div class="verify">● ${x.s}</div>
               </article>
             `;
           }).join('')
@@ -1639,11 +1827,14 @@
       }
 
       const submissions = JSON.parse(localStorage.getItem('wcParisSubmissions') || '[]');
+      const submittedAt = new Date().toISOString();
       submissions.push({
+        id: codeEntryId(data[index].b, data[index].a, code, submittedAt),
         brand: data[index].b,
         address: data[index].a,
         code,
-        submittedAt: new Date().toISOString()
+        submittedAt,
+        submitterDevice: getDeviceId()
       });
       localStorage.setItem('wcParisSubmissions', JSON.stringify(submissions));
 
