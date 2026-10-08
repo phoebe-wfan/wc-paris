@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="WC Paris — codes et informations communautaires sur les toilettes des fast-foods et cafés à Paris.">
+  <meta name="description" content="WC Paris : toilettes gratuites, publiques, payantes et codes WC à Paris. Find public toilets, free toilets and toilets near me in Paris.">
   <meta name="theme-color" content="#111111">
   <meta name="application-name" content="WC Paris">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,7 +12,18 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/wc-paris-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
-  <title>WC Paris — Codes</title>
+  <title>WC Paris — Toilettes à Paris | Public toilets near me</title>
+  <link rel="canonical" href="https://wcparis.fr/">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="keywords" content="WC Paris, toilettes Paris, toilettes gratuites Paris, toilettes publiques Paris, toilettes autour de moi, public toilets Paris, free toilets Paris, toilets near me Paris, bathroom Paris, restroom Paris">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wcparis.fr/">
+  <meta property="og:title" content="WC Paris — Toilettes à Paris | Public toilets near me">
+  <meta property="og:description" content="Trouvez des toilettes gratuites, publiques, payantes et des codes WC à Paris. Find public toilets, free toilets and toilets near you in Paris.">
+  <meta property="og:image" content="https://wcparis.fr/apple-touch-icon.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="WC Paris — Toilettes à Paris | Public toilets near me">
+  <meta name="twitter:description" content="Find public toilets, free toilets and toilets near you in Paris.">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -169,6 +180,19 @@
     .location-status{
       color:var(--muted);
       font-size:13px;
+    }
+
+    .distance-badge{
+      display:inline-flex;
+      align-items:center;
+      width:max-content;
+      margin-top:8px;
+      padding:5px 9px;
+      border-radius:999px;
+      background:var(--pill);
+      color:var(--text);
+      font-size:12px;
+      font-weight:700;
     }
 
     .grid{
@@ -778,6 +802,37 @@
         .replace(/[^a-z0-9]/g,'');
     }
 
+    function distanceFromUser(item) {
+      if (!userLatLng || !item || !item._latlng) return null;
+      return map.distance(userLatLng, item._latlng);
+    }
+
+    function formatDistance(meters) {
+      if (!Number.isFinite(meters)) return '';
+      if (meters < 1000) {
+        const rounded = Math.max(10, Math.round(meters / 10) * 10);
+        return rounded + ' m';
+      }
+      return (meters / 1000).toLocaleString('fr-FR', {
+        minimumFractionDigits: meters < 10000 ? 1 : 0,
+        maximumFractionDigits: 1
+      }) + ' km';
+    }
+
+    function distanceBadge(item) {
+      const meters = distanceFromUser(item);
+      return meters === null ? '' : '<div class="distance-badge">📍 À ' + formatDistance(meters) + '</div>';
+    }
+
+    function sortNearestFirst(items) {
+      if (!userLatLng) return items;
+      return [...items].sort((a,b) => {
+        const da = distanceFromUser(a);
+        const db = distanceFromUser(b);
+        return (da === null ? Infinity : da) - (db === null ? Infinity : db);
+      });
+    }
+
     const map = L.map('map').setView([48.8566, 2.3522], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom:19,
@@ -866,6 +921,7 @@
         mapEl.style.display = 'block';
         status.textContent = 'Position trouvée · WC proches affichés sur la carte.';
         updateMap(lastMapItems, lastMapIsCode);
+        render();
         setTimeout(() => map.invalidateSize(), 50);
         return;
       }
@@ -884,6 +940,7 @@
           mapEl.style.display = 'block';
           status.textContent = 'Position trouvée · WC proches affichés sur la carte.';
           updateMap(lastMapItems, lastMapIsCode);
+          render();
           setTimeout(() => map.invalidateSize(), 50);
         },
         () => {
@@ -936,6 +993,7 @@
 
       geocodeBusy = false;
       updateMap(items, true);
+      if (userLatLng) render();
     }
 
     async function loadMetroToilets() {
@@ -1030,7 +1088,9 @@
           normalizeText(x.a + ' ' + x.b).includes(q)
         );
 
-        if (document.getElementById('sort').value === 'brand') {
+        if (userLatLng) {
+          arr = sortNearestFirst(arr);
+        } else if (document.getElementById('sort').value === 'brand') {
           arr.sort((x,y) => x.b.localeCompare(y.b));
         } else {
           arr.sort((x,y) => (y.v || '').localeCompare(x.v || ''));
@@ -1063,6 +1123,7 @@
                   <div>
                     <div class="name">${x.b}</div>
                     <div class="addr">${x.a}</div>
+                    ${distanceBadge(x)}
                   </div>
                   <div class="logo">${latest ? 'CODE' : 'INFO'}</div>
                 </div>
@@ -1110,8 +1171,11 @@
         let arr = publicPlaceToilets
           .filter(x => normalizeText(
             x.name + ' ' + x.address + ' ' + (x.access || '')
-          ).includes(q))
-          .sort((a,b) => a.name.localeCompare(b.name));
+          ).includes(q));
+
+        arr = userLatLng
+          ? sortNearestFirst(arr)
+          : arr.sort((a,b) => a.name.localeCompare(b.name));
 
         document.getElementById('stats').textContent =
           arr.length + ' lieux publics avec toilettes · Paris';
@@ -1125,6 +1189,7 @@
                 <div>
                   <div class="name">${x.name}</div>
                   <div class="addr">${x.address}</div>
+                  ${distanceBadge(x)}
                 </div>
                 <div class="logo">${x.type || 'PUBLIC'}</div>
               </div>
@@ -1151,8 +1216,11 @@
           .filter(x => normalizeText(
             x.name + ' ' + x.address + ' ' + (x.price || '') + ' ' +
             (x.member || '') + ' ' + (x.access || '')
-          ).includes(q))
-          .sort((a,b) => a.name.localeCompare(b.name));
+          ).includes(q));
+
+        arr = userLatLng
+          ? sortNearestFirst(arr)
+          : arr.sort((a,b) => a.name.localeCompare(b.name));
 
         document.getElementById('stats').textContent =
           arr.length + ' centres commerciaux avec toilettes';
@@ -1166,6 +1234,7 @@
                 <div>
                   <div class="name">${x.name}</div>
                   <div class="addr">${x.address}</div>
+                  ${distanceBadge(x)}
                 </div>
                 <div class="logo">${x.price}</div>
               </div>
@@ -1195,8 +1264,11 @@
             (x.line || '') + ' ' +
             (x.location || '') + ' ' +
             (x.tariff || '')
-          ).includes(q))
-          .sort((a,b) => (a.station || '').localeCompare(b.station || ''));
+          ).includes(q));
+
+        arr = userLatLng
+          ? sortNearestFirst(arr)
+          : arr.sort((a,b) => (a.station || '').localeCompare(b.station || ''));
 
         document.getElementById('stats').textContent =
           arr.length + ' stations / gares avec toilettes · RATP + SNCF';
@@ -1214,6 +1286,7 @@
                 <div>
                   <div class="name">${x.operator || 'Transport'} · ${x.station}</div>
                   <div class="addr">${x.line || ''}</div>
+                  ${distanceBadge(x)}
                 </div>
                 <div class="logo">${x.tariff || 'Tarif ?'}</div>
               </div>
@@ -1253,7 +1326,9 @@
         .filter(x => x.kind === category)
         .filter(x => normalizeText(x.name + ' ' + x.address + ' ' + (x.access || '')).includes(q));
 
-      arr.sort((a,b) => a.address.localeCompare(b.address));
+      arr = userLatLng
+        ? sortNearestFirst(arr)
+        : arr.sort((a,b) => a.address.localeCompare(b.address));
 
       const categoryLabel =
         category === 'sanisette' ? ' sanisettes gratuites' :
@@ -1271,6 +1346,7 @@
               <div>
                 <div class="name">${x.name}</div>
                 <div class="addr">${x.address || 'Adresse non renseignée'}</div>
+                ${distanceBadge(x)}
               </div>
               <div class="logo">${category === 'sanisette' ? 'SANISSETTE' : (category === 'free' ? 'GRATUIT' : 'PAYANT')}</div>
             </div>
