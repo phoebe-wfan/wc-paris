@@ -347,7 +347,7 @@
     <div class="stats" id="stats"></div>
 
     <div class="nearby-wrap">
-      <button type="button" class="nearby-btn" id="nearbyBtn">🚻 Toilettes autour de moi</button>
+      <button type="button" class="nearby-btn" id="nearbyBtn">🗺️ WC autour de moi</button>
       <span class="location-status" id="locationStatus"></span>
     </div>
 
@@ -854,6 +854,22 @@
       const status = document.getElementById('locationStatus');
       const mapEl = document.getElementById('map');
 
+      if (mapVisible) {
+        mapVisible = false;
+        mapEl.style.display = 'none';
+        status.textContent = '';
+        return;
+      }
+
+      if (userLatLng) {
+        mapVisible = true;
+        mapEl.style.display = 'block';
+        status.textContent = 'Position trouvée · WC proches affichés sur la carte.';
+        updateMap(lastMapItems, lastMapIsCode);
+        setTimeout(() => map.invalidateSize(), 50);
+        return;
+      }
+
       if (!navigator.geolocation) {
         status.textContent = 'La géolocalisation n’est pas disponible sur cet appareil.';
         return;
@@ -866,8 +882,9 @@
           userLatLng = [position.coords.latitude, position.coords.longitude];
           mapVisible = true;
           mapEl.style.display = 'block';
-          status.textContent = 'Position trouvée · toilettes proches affichées sur la carte.';
+          status.textContent = 'Position trouvée · WC proches affichés sur la carte.';
           updateMap(lastMapItems, lastMapIsCode);
+          setTimeout(() => map.invalidateSize(), 50);
         },
         () => {
           status.textContent = 'Impossible d’accéder à votre position. Autorisez la localisation dans Safari puis réessayez.';
