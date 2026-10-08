@@ -1613,6 +1613,21 @@
           '</div>';
     }
 
+    // One-time cleanup of the accidental local test submission: Burger King Saint-Michel / 0000.
+    try {
+      const cleanupKey = 'wcParisCleanup0000_20261008';
+      if (!localStorage.getItem(cleanupKey)) {
+        const submissions = JSON.parse(localStorage.getItem('wcParisSubmissions') || '[]');
+        const cleaned = submissions.filter(s => !(
+          s.brand === 'Burger King' &&
+          s.address === 'Saint-Michel, Paris 5e' &&
+          s.code === '0000'
+        ));
+        localStorage.setItem('wcParisSubmissions', JSON.stringify(cleaned));
+        localStorage.setItem(cleanupKey, '1');
+      }
+    } catch(e) {}
+
     function submitUpdate(index) {
       const input = document.getElementById('update-' + index);
       const msg = document.getElementById('submitted-' + index);
