@@ -388,8 +388,6 @@
     </header>
 
     <div class="brands" id="categories"></div>
-    <div class="brands" id="brands"></div>
-
     <div class="stats" id="stats"></div>
 
     <div class="nearby-wrap">
@@ -488,7 +486,6 @@
     ];
 
 
-    let brand = 'Tous';
     let category = 'code';
     let publicToilets = [];
     let publicLoading = false;
@@ -496,16 +493,6 @@
     let metroToilets = [];
     let metroLoading = false;
     let metroLoadError = false;
-
-    const brands = [
-      'Tous',
-      'McDonald’s',
-      'KFC',
-      'Burger King',
-      'Starbucks',
-      'Popeyes',
-      'Pret A Manger'
-    ];
 
     const categories = [
       {id:'sanisette',icon:'⛺️',key:'catSanisette'},
@@ -942,14 +929,10 @@
         const x = categories[i];
         if (x) btn.textContent = x.icon + ' ' + t(x.key);
       });
-      document.querySelectorAll('.brand').forEach(btn => {
-        if (btn.dataset.brand === 'Tous') btn.textContent = t('all');
-      });
       render();
     }
 
     const categoryEl = document.getElementById('categories');
-    const bEl = document.getElementById('brands');
 
     categories.forEach(x => {
       const d = document.createElement('button');
@@ -959,7 +942,6 @@
         category = x.id;
         document.querySelectorAll('.category').forEach(z => z.classList.remove('active'));
         d.classList.add('active');
-        bEl.style.display = category === 'code' ? 'flex' : 'none';
         document.getElementById('sort').style.display = category === 'code' ? '' : 'none';
         if ((category === 'free' || category === 'sanisette' || category === 'paid') && !publicToilets.length && !publicLoading) {
           await loadPublicToilets();
@@ -970,20 +952,6 @@
         render();
       };
       categoryEl.appendChild(d);
-    });
-
-    brands.forEach(x => {
-      let d = document.createElement('button');
-      d.className = 'brand' + (x === 'Tous' ? ' active' : '');
-      d.dataset.brand = x;
-      d.textContent = x === 'Tous' ? t('all') : x;
-      d.onclick = () => {
-        brand = x;
-        document.querySelectorAll('.brand').forEach(z => z.classList.remove('active'));
-        d.classList.add('active');
-        render();
-      };
-      bEl.appendChild(d);
     });
 
     document.querySelectorAll('.language-switcher button').forEach(btn => {
@@ -1305,7 +1273,6 @@
 
       if (category === 'code') {
         let arr = data.filter(x =>
-          (brand === 'Tous' || x.b === brand) &&
           normalizeText(x.a + ' ' + x.b).includes(q)
         );
 
