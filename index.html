@@ -142,6 +142,7 @@
     }
 
     #map{
+      display:none;
       max-width:1056px;
       height:380px;
       margin:0 auto 18px;
@@ -149,6 +150,25 @@
       border-radius:18px;
       overflow:hidden;
       background:var(--card);
+    }
+
+    .nearby-wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 22px 14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nearby-btn{
+      font-weight:700;
+    }
+
+    .location-status{
+      color:var(--muted);
+      font-size:13px;
     }
 
     .grid{
@@ -325,6 +345,11 @@
     <div class="brands" id="brands"></div>
 
     <div class="stats" id="stats"></div>
+
+    <div class="nearby-wrap">
+      <button type="button" class="nearby-btn" id="nearbyBtn">🚻 Toilettes autour de moi</button>
+      <span class="location-status" id="locationStatus"></span>
+    </div>
 
     <div id="map"></div>
 
@@ -759,7 +784,12 @@
       attribution:'&copy; OpenStreetMap contributors'
     }).addTo(map);
     const markerLayer = L.layerGroup().addTo(map);
+    const userLayer = L.layerGroup().addTo(map);
     let geocodeBusy = false;
+    let mapVisible = false;
+    let userLatLng = null;
+    let lastMapItems = [];
+    let lastMapIsCode = false;
 
     function getLatLng(r){
       const p = r.geo_point_2d || r.coordonnees_geo || r.coordinates || null;
@@ -775,6 +805,11 @@
     }
 
     function updateMap(items, isCode=false){
+      lastMapItems = items;
+      lastMapIsCode = isCode;
+
+      if (!mapVisible) return;
+
       markerLayer.clearLayers();
       const pts = [];
 
@@ -787,10 +822,61 @@
         pts.push(ll);
       });
 
-      if (pts.length === 1) map.setView(pts[0], 16);
-      else if (pts.length > 1) map.fitBounds(pts, {padding:[24,24], maxZoom:15});
-      else map.setView([48.8566,2.3522],12);
+      userLayer.clearLayers();
+
+      if (userLatLng) {
+        L.circleMarker(userLatLng, {
+          radius:8,
+          weight:3,
+          fillOpacity:1
+        }).addTo(userLayer).bindPopup('Vous êtes ici');
+
+        const nearby = pts
+          .map(ll => ({ll, distance: map.distance(userLatLng, ll)}))
+          .sort((a,b) => a.distance - b.distance)
+          .slice(0, 20);
+
+        const bounds = [userLatLng, ...nearby.map(x => x.ll)];
+        if (bounds.length > 1) map.fitBounds(bounds, {padding:[30,30], maxZoom:16});
+        else map.setView(userLatLng, 16);
+      } else if (pts.length === 1) {
+        map.setView(pts[0], 16);
+      } else if (pts.length > 1) {
+        map.fitBounds(pts, {padding:[24,24], maxZoom:15});
+      } else {
+        map.setView([48.8566,2.3522],12);
+      }
+
+      setTimeout(() => map.invalidateSize(), 50);
     }
+
+    function showNearbyToilets(){
+      const status = document.getElementById('locationStatus');
+      const mapEl = document.getElementById('map');
+
+      if (!navigator.geolocation) {
+        status.textContent = 'La géolocalisation n’est pas disponible sur cet appareil.';
+        return;
+      }
+
+      status.textContent = 'Recherche de votre position…';
+
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          userLatLng = [position.coords.latitude, position.coords.longitude];
+          mapVisible = true;
+          mapEl.style.display = 'block';
+          status.textContent = 'Position trouvée · toilettes proches affichées sur la carte.';
+          updateMap(lastMapItems, lastMapIsCode);
+        },
+        () => {
+          status.textContent = 'Impossible d’accéder à votre position. Autorisez la localisation dans Safari puis réessayez.';
+        },
+        {enableHighAccuracy:true, timeout:10000, maximumAge:60000}
+      );
+    }
+
+    document.getElementById('nearbyBtn').addEventListener('click', showNearbyToilets);
 
     function geocodeCache(){
       try { return JSON.parse(localStorage.getItem('wcParisGeocodes') || '{}'); }
@@ -979,7 +1065,7 @@
                     autocomplete="off"
                     placeholder="Nouveau code…"
                     aria-label="Nouveau code pour ${x.b} ${x.a}">
-                  <button type="button" onclick="submitUpdate(${data.indexOf(x)})">提交</button>
+                  <button type="button" onclick="submitUpdate(${data.indexOf(x)})">OK</button>
                 </div>
                 <div class="submitted" id="submitted-${data.indexOf(x)}"></div>
 
@@ -1199,7 +1285,7 @@
       const code = input.value.trim();
 
       if (!code) {
-        msg.textContent = '请输入新密码。';
+        msg.textContent = 'Saisis un nouveau code.';
         return;
       }
 
@@ -1213,7 +1299,7 @@
       localStorage.setItem('wcParisSubmissions', JSON.stringify(submissions));
 
       input.value = '';
-      msg.textContent = '✓ 已提交；旧密码和新密码都会保留。';
+      msg.textContent = '✓ Enregistré. L’ancien code et le nouveau sont conservés.';
       render();
     }
 
