@@ -54,7 +54,7 @@
     }
 
     header{
-      padding:28px 22px 18px;
+      padding:24px 22px 14px;
       max-width:1100px;
       margin:auto;
     }
@@ -63,6 +63,17 @@
       font-size:30px;
       letter-spacing:-.04em;
       margin:0 0 7px;
+    }
+
+    .header-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .brand-block{
+      min-width:0;
     }
 
     .site-brand{
@@ -91,7 +102,7 @@
     .language-switcher{
       display:flex;
       gap:6px;
-      margin-top:12px;
+      flex:0 0 auto;
     }
 
     .language-switcher button{
@@ -107,9 +118,41 @@
 
     .bar{
       display:flex;
-      gap:9px;
-      margin-top:20px;
-      flex-wrap:wrap;
+      gap:12px;
+      margin-top:16px;
+      align-items:center;
+    }
+
+    .search-box{
+      display:flex;
+      flex:1;
+      min-width:0;
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:12px;
+      overflow:hidden;
+    }
+
+    .search-box input{
+      border:0;
+      border-radius:0;
+      min-width:0;
+      outline:none;
+      background:transparent;
+    }
+
+    .search-box button{
+      border:0;
+      border-left:1px solid var(--line);
+      border-radius:0;
+      font-weight:700;
+      padding-left:18px;
+      padding-right:18px;
+    }
+
+    .bar .nearby-btn{
+      flex:0 0 auto;
+      white-space:nowrap;
     }
 
     input,select,button{
@@ -184,10 +227,6 @@
       max-width:1100px;
       margin:0 auto;
       padding:0 22px 14px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
     }
 
     .nearby-btn{
@@ -356,6 +395,10 @@
     @media(max-width:600px){
       h1{font-size:25px}
       .grid{grid-template-columns:1fr}
+      .header-top{align-items:flex-start}
+      .bar{flex-wrap:wrap}
+      .search-box{flex-basis:100%}
+      .bar .nearby-btn{width:100%}
     }
   </style>
 </head>
@@ -363,27 +406,31 @@
 <body>
   <div id="app">
     <header>
-      <div class="site-brand">
-        <img class="site-logo" src="/wc-paris-icon.svg" alt="WC Paris">
-        <h1>WC Paris</h1>
-      </div>
+      <div class="header-top">
+        <div class="brand-block">
+          <div class="site-brand">
+            <img class="site-logo" src="/wc-paris-icon.svg" alt="WC Paris">
+            <h1>WC Paris</h1>
+          </div>
 
-      <div class="sub" id="subtitle">
-        Toilettes à code, gratuites et payantes à Paris.
-      </div>
+          <div class="sub" id="subtitle">
+            Toilettes à code, gratuites et payantes à Paris.
+          </div>
+        </div>
 
-      <div class="language-switcher" aria-label="Language">
-        <button type="button" data-lang="en">EN</button>
-        <button type="button" data-lang="zh">CN</button>
+        <div class="language-switcher" aria-label="Language">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="zh">CN</button>
+        </div>
       </div>
 
       <div class="bar">
-        <input id="q" placeholder="Rechercher une adresse, un quartier, un lieu…">
+        <div class="search-box">
+          <input id="q" placeholder="Rechercher une adresse, un quartier, un lieu…">
+          <button type="button" id="searchBtn">Search</button>
+        </div>
 
-        <select id="sort">
-          <option value="recent">Plus récemment vérifié</option>
-          <option value="brand">Enseigne</option>
-        </select>
+        <button type="button" class="nearby-btn" id="nearbyBtn">🗺️ WC autour de moi</button>
       </div>
     </header>
 
@@ -391,7 +438,6 @@
     <div class="stats" id="stats"></div>
 
     <div class="nearby-wrap">
-      <button type="button" class="nearby-btn" id="nearbyBtn">🗺️ WC autour de moi</button>
       <span class="location-status" id="locationStatus"></span>
     </div>
 
@@ -781,6 +827,7 @@
       en:{
         subtitle:'Toilet codes, free and paid toilets in Paris.',
         search:'Search an address, neighborhood or place…',
+        searchButton:'Search',
         sortRecent:'Most recently verified',
         sortBrand:'Brand',
         all:'All',
@@ -844,6 +891,7 @@
       zh:{
         subtitle:'巴黎厕所密码、免费厕所和付费厕所信息。',
         search:'搜索地址、街区或地点…',
+        searchButton:'搜索',
         sortRecent:'最近验证',
         sortBrand:'品牌',
         all:'全部',
@@ -912,9 +960,7 @@
       document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
       document.getElementById('subtitle').textContent = t('subtitle');
       document.getElementById('q').placeholder = t('search');
-      const sort = document.getElementById('sort');
-      sort.options[0].textContent = t('sortRecent');
-      sort.options[1].textContent = t('sortBrand');
+      document.getElementById('searchBtn').textContent = t('searchButton');
       document.getElementById('nearbyBtn').textContent = t('nearby');
       document.getElementById('communityNote').textContent = t('communityNote');
       document.getElementById('legalLink').textContent = t('legal');
@@ -942,7 +988,6 @@
         category = x.id;
         document.querySelectorAll('.category').forEach(z => z.classList.remove('active'));
         d.classList.add('active');
-        document.getElementById('sort').style.display = category === 'code' ? '' : 'none';
         if ((category === 'free' || category === 'sanisette' || category === 'paid') && !publicToilets.length && !publicLoading) {
           await loadPublicToilets();
         }
@@ -963,7 +1008,10 @@
     });
 
     document.getElementById('q').oninput = render;
-    document.getElementById('sort').onchange = render;
+    document.getElementById('searchBtn').onclick = render;
+    document.getElementById('q').addEventListener('keydown', e => {
+      if (e.key === 'Enter') render();
+    });
 
     function normalizeText(value='') {
       return value
@@ -1278,8 +1326,6 @@
 
         if (userLatLng) {
           arr = sortNearestFirst(arr);
-        } else if (document.getElementById('sort').value === 'brand') {
-          arr.sort((x,y) => x.b.localeCompare(y.b));
         } else {
           arr.sort((x,y) => (y.v || '').localeCompare(x.v || ''));
         }
